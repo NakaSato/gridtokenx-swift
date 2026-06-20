@@ -56,7 +56,7 @@ gridtokexios/
 - `Core/Notifications/LiveActivityManager.swift` — starts/updates/ends the energy-trade Live Activity (`Activity<EnergyTradeAttributes>`). Local-driven (`pushType: nil`); `start` replaces any running activity.
 - `Core/Notifications/TxLiveActivityManager.swift` — shows/ends the transaction-success Live Activity (`Activity<TxReceiptAttributes>`); `show` replaces any running receipt and auto-ends after a delay. Wired to wallet Send/Deposit.
 - `Core/Notifications/NotificationManager.swift` — user notifications (`UNUserNotificationCenter`): `configure()` (auth + foreground-banner delegate `ForegroundPresenter`), `send(...)`/`sendSample()`. Tapped notifications with a `deeplink` payload re-broadcast via `didTapDeeplink` → RootView navigates. Local notifications need the one-time "Allow" tap (no simctl UI injection — grant manually in the sim).
-- `Features/Profile/ProfileWalletView.swift` — `07 · Profile & Wallet`. Portfolio hero, token holdings / activity tabs, account settings rows. Port of `mock-ui/wallet.jsx`. Reached from the Dashboard profile button.
+- `Features/Profile/ProfileWalletView.swift` — `07 · Profile & Wallet`. Portfolio hero, token holdings / activity tabs, account settings rows. Port of `mock-ui/wallet.jsx`. Reached from the Dashboard profile button. Send/Deposit tap → `onSend`/`onReceive` → `TxLiveActivityManager.show(...)`; the receipt appears only as the Live Activity / Dynamic Island notification (no in-app banner).
 
 ### EnergyIslandWidget target
 
