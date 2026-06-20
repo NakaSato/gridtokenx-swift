@@ -44,6 +44,9 @@ struct RootView: View {
             if args.contains("SHOW_WALLET") {
                 route = .profileWallet
             }
+            if args.contains("TX_ISLAND") {
+                TxLiveActivityManager.show(TxReceipt(mode: .send))
+            }
             #endif
         }
     }
@@ -86,7 +89,15 @@ struct RootView: View {
                 onProfile: { push(.profileWallet) }
             )
         case .profileWallet:
-            ProfileWalletView(onBack: { pop(.app) })
+            ProfileWalletView(
+                onBack: { pop(.app) },
+                onSend: { TxLiveActivityManager.show(
+                    TxReceipt(mode: .send, amountGTX: 25, fiatText: "≈ ฿108.00",
+                              counterparty: "Somchai", handle: "@somchai_p")) },
+                onReceive: { TxLiveActivityManager.show(
+                    TxReceipt(mode: .receive, amountGTX: 18, fiatText: "≈ ฿77.76",
+                              counterparty: "Noi", handle: "@noi.energy")) }
+            )
         }
     }
 

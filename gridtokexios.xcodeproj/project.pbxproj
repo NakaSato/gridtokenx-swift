@@ -10,10 +10,15 @@
 		03B5438104B0D5A92C92FB85 /* EnergyTradeIsland.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4C841FD96CAAD5888CEF2 /* EnergyTradeIsland.swift */; };
 		1AF977C3403EFCE95D8B8D2F /* EnergyTradeAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3759935088A511C5967114 /* EnergyTradeAttributes.swift */; };
 		256BAD4C823BCB6E6513E86A /* ColorHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540F986167AF5A0F6811FD7E /* ColorHex.swift */; };
+		2C7131FF5749A96958603E7C /* TxReceiptAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2DD6ED46A3A80CD0BD7775 /* TxReceiptAttributes.swift */; };
 		2CCE2104E3B521107CDB11E0 /* EnergyTradeAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3759935088A511C5967114 /* EnergyTradeAttributes.swift */; };
 		34124EC2F11D4B2BB091C719 /* EnergyTradeIsland.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4C841FD96CAAD5888CEF2 /* EnergyTradeIsland.swift */; };
 		47382BF39BB1AE93C6F9096E /* EnergyIslandWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 715CC77014268F765DEC1E7C /* EnergyIslandWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5544FECE6229FC459CD7BE40 /* TxReceiptIsland.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D2136D5A73E7A6DA887273 /* TxReceiptIsland.swift */; };
 		A154DFAD7F96DDE2B6A4EF6B /* EnergyIslandWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFE070DF4359213D07772AE /* EnergyIslandWidgetBundle.swift */; };
+		A604645CD0D6F9876C8C0FDA /* TxReceiptAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2DD6ED46A3A80CD0BD7775 /* TxReceiptAttributes.swift */; };
+		A97AA1C005114F38435827FC /* TxReceiptIsland.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D2136D5A73E7A6DA887273 /* TxReceiptIsland.swift */; };
+		D3B298F624957669829119E9 /* TxLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE297EA94358D6D3947B9604 /* TxLiveActivity.swift */; };
 		E0DB39047D3317016CB0BDA4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F48C835D4201C7FABA5117E /* Foundation.framework */; };
 		F96C1E63F29066CAF20F6FD4 /* EnergyIslandLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14D8212448B2F5B191995F1 /* EnergyIslandLiveActivity.swift */; };
 /* End PBXBuildFile section */
@@ -60,6 +65,7 @@
 		1F48C835D4201C7FABA5117E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		2CE4C841FD96CAAD5888CEF2 /* EnergyTradeIsland.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EnergyTradeIsland.swift; sourceTree = "<group>"; };
 		540F986167AF5A0F6811FD7E /* ColorHex.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorHex.swift; sourceTree = "<group>"; };
+		5F2DD6ED46A3A80CD0BD7775 /* TxReceiptAttributes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TxReceiptAttributes.swift; sourceTree = "<group>"; };
 		715CC77014268F765DEC1E7C /* EnergyIslandWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = EnergyIslandWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		89D920F32FE68FA1001C2748 /* gridtokexios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = gridtokexios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		89D921022FE68FA2001C2748 /* gridtokexiosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = gridtokexiosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -67,7 +73,9 @@
 		AAFE070DF4359213D07772AE /* EnergyIslandWidgetBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EnergyIslandWidgetBundle.swift; sourceTree = "<group>"; };
 		B14D8212448B2F5B191995F1 /* EnergyIslandLiveActivity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EnergyIslandLiveActivity.swift; sourceTree = "<group>"; };
 		B2DCA13A6830150C994DDE8E /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BE297EA94358D6D3947B9604 /* TxLiveActivity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TxLiveActivity.swift; sourceTree = "<group>"; };
 		EE3759935088A511C5967114 /* EnergyTradeAttributes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EnergyTradeAttributes.swift; sourceTree = "<group>"; };
+		F5D2136D5A73E7A6DA887273 /* TxReceiptIsland.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TxReceiptIsland.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -136,6 +144,9 @@
 				B14D8212448B2F5B191995F1 /* EnergyIslandLiveActivity.swift */,
 				AAFE070DF4359213D07772AE /* EnergyIslandWidgetBundle.swift */,
 				B2DCA13A6830150C994DDE8E /* Info.plist */,
+				F5D2136D5A73E7A6DA887273 /* TxReceiptIsland.swift */,
+				5F2DD6ED46A3A80CD0BD7775 /* TxReceiptAttributes.swift */,
+				BE297EA94358D6D3947B9604 /* TxLiveActivity.swift */,
 			);
 			name = EnergyIslandWidget;
 			path = EnergyIslandWidget;
@@ -347,6 +358,8 @@
 			files = (
 				03B5438104B0D5A92C92FB85 /* EnergyTradeIsland.swift in Sources */,
 				1AF977C3403EFCE95D8B8D2F /* EnergyTradeAttributes.swift in Sources */,
+				5544FECE6229FC459CD7BE40 /* TxReceiptIsland.swift in Sources */,
+				A604645CD0D6F9876C8C0FDA /* TxReceiptAttributes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -373,6 +386,9 @@
 				256BAD4C823BCB6E6513E86A /* ColorHex.swift in Sources */,
 				F96C1E63F29066CAF20F6FD4 /* EnergyIslandLiveActivity.swift in Sources */,
 				A154DFAD7F96DDE2B6A4EF6B /* EnergyIslandWidgetBundle.swift in Sources */,
+				A97AA1C005114F38435827FC /* TxReceiptIsland.swift in Sources */,
+				2C7131FF5749A96958603E7C /* TxReceiptAttributes.swift in Sources */,
+				D3B298F624957669829119E9 /* TxLiveActivity.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

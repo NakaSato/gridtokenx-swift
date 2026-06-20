@@ -38,7 +38,7 @@ struct EnergyIslandLiveActivity: Widget {
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     HStack(spacing: 10) {
-                        FlowBars(color: trade.accent, count: 5)
+                        FlowBars(color: trade.accent, count: 5, phase: trade.phase)
                         ProgressView(value: trade.progress)
                             .tint(trade.accent)
                         Text("\(trade.kwh, specifier: "%.1f") kWh")

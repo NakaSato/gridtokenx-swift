@@ -1,0 +1,151 @@
+//
+//  TxReceiptIsland.swift
+//  gridtokexios
+//
+//  Transaction-success Dynamic Island / Live Activity UI — token send & receive
+//  receipts. Two presentations: compact (check disc + signed amount) and
+//  expanded (receipt row + on-chain settle line). Ported from
+//  mock-ui/energy-island.jsx (TxIslandCompact / TxIslandSuccess).
+//
+//  Shared between the app target and the EnergyIslandWidget extension: the app
+//  drives it via TxLiveActivityManager; the widget reuses these subviews inside
+//  its ActivityConfiguration + DynamicIsland { } regions.
+//
+
+import SwiftUI
+
+// MARK: - Model (doubles as the Live Activity ContentState)
+
+struct TxReceipt: Codable, Hashable {
+    enum Mode: String, Codable { case send, receive }
+
+    var mode: Mode = .send
+    var amountGTX: Double = 25.0
+    var fiatText: String = "≈ ฿108.00"
+    var counterparty: String = "Somchai"
+    var handle: String = "@somchai_p"
+    var txHash: String = "0x7a3f…c2e1"
+
+    var sending: Bool { mode == .send }
+    /// Amount tint — violet for outgoing, green for incoming.
+    var accent: Color { sending ? .islandVioletSoft : .islandUp }
+    var title: String { sending ? "Sent successfully" : "Received" }
+    var who: String { (sending ? "To " : "From ") + counterparty + " · " + handle }
+    var amountText: String { (sending ? "−" : "+") + String(format: "%.2f", amountGTX) }
+    var compactAmount: String {
+        (sending ? "−" : "+") + String(format: "%.0f", amountGTX) + " GTX"
+    }
+}
+
+// MARK: - Pieces
+
+/// Green success disc with a check mark.
+struct CheckDisc: View {
+    var size: CGFloat = 44
+    var color: Color = .islandUp
+
+    var body: some View {
+        Circle()
+            .fill(color.opacity(0.22))
+            .overlay(Circle().stroke(color, lineWidth: 1))
+            .frame(width: size, height: size)
+            .overlay(
+                Image(systemName: "checkmark")
+                    .font(.system(size: size * 0.4, weight: .heavy))
+                    .foregroundStyle(color)
+            )
+    }
+}
+
+/// Success disc with a small directional badge (send/receive arrow).
+struct TxBadgeDisc: View {
+    let tx: TxReceipt
+    var size: CGFloat = 44
+
+    var body: some View {
+        CheckDisc(size: size, color: .islandUp)
+            .overlay(alignment: .bottomTrailing) {
+                Circle()
+                    .fill(tx.sending ? Color.islandViolet : Color.islandUp)
+                    .frame(width: size * 0.45, height: size * 0.45)
+                    .overlay(Circle().stroke(.black, lineWidth: 2.5))
+                    .overlay(
+                        Image(systemName: tx.sending ? "arrow.up" : "arrow.down")
+                            .font(.system(size: size * 0.22, weight: .bold))
+                            .foregroundStyle(.white)
+                    )
+                    .offset(x: 3, y: 3)
+            }
+    }
+}
+
+// MARK: - Compact (Dynamic Island leading / trailing)
+
+struct TxIslandCompactLeading: View {
+    let tx: TxReceipt
+    var body: some View {
+        CheckDisc(size: 22, color: .islandUp)
+    }
+}
+
+struct TxIslandCompactTrailing: View {
+    let tx: TxReceipt
+    var body: some View {
+        Text(tx.compactAmount)
+            .font(.system(size: 13, weight: .bold, design: .monospaced))
+            .foregroundStyle(.white)
+    }
+}
+
+// MARK: - Expanded (lock screen banner + island expanded)
+
+struct TxIslandExpanded: View {
+    let tx: TxReceipt
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 13) {
+                TxBadgeDisc(tx: tx, size: 44)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(tx.title)
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundStyle(.white)
+                    Text(tx.who)
+                        .font(.system(size: 12.5))
+                        .foregroundStyle(Color.islandMuted)
+                        .lineLimit(1)
+                }
+                Spacer(minLength: 8)
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text(tx.amountText)
+                        .font(.system(size: 17, weight: .heavy, design: .monospaced))
+                        .foregroundStyle(tx.accent)
+                    Text(tx.fiatText)
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundStyle(Color.islandFaint)
+                }
+            }
+
+            // settle line
+            HStack(spacing: 8) {
+                Circle().fill(Color.islandUp).frame(width: 6, height: 6)
+                Text("Settled on-chain")
+                    .font(.system(size: 12))
+                    .foregroundStyle(Color.islandMuted)
+                Spacer()
+                Text(tx.txHash)
+                    .font(.system(size: 11.5, design: .monospaced))
+                    .foregroundStyle(Color.islandFaint)
+            }
+            .padding(.top, 12)
+            .overlay(alignment: .top) {
+                Rectangle().fill(Color.white.opacity(0.1)).frame(height: 1)
+            }
+            .padding(.top, 1)
+        }
+    }
+}
+
+#Preview {
+    ZStack { Color.black; TxIslandExpanded(tx: TxReceipt()).padding() }
+}

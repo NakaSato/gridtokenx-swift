@@ -28,6 +28,9 @@ struct EnergyTrade: Codable, Hashable {
     var zone: String = "Zone 2"
     var liveFor: String = "6 min"
     var counterparty: String = "4 buyers"
+    /// Bumped on each live update to drive the flow-bars pulse in the island
+    /// (the OS only animates between ContentState updates, not free-running).
+    var phase: Int = 0
 
     var selling: Bool { side == .sell }
     var accent: Color { selling ? .islandUp : .islandDown }
@@ -44,6 +47,7 @@ extension Color {
     static let islandUp     = Color(hex: "2FD08A")   // sell / earning
     static let islandDown   = Color(hex: "FF5C6C")   // buy / spending
     static let islandViolet = Color(hex: "9B6BFF")
+    static let islandVioletSoft = Color(hex: "C9B4FF")
     static let islandText    = Color(hex: "F4F1FA")
     static let islandMuted   = Color(white: 1, opacity: 0.6)
     static let islandFaint   = Color(white: 1, opacity: 0.4)
@@ -56,9 +60,20 @@ private let monoNum = Font.system(.body, design: .monospaced)
 struct FlowBars: View {
     var color: Color
     var count: Int = 4
+    /// When set, bar heights step through `steps` keyed on this value. The host
+    /// (Live Activity) bumps it each ContentState update, so the island animates
+    /// between snapshots. When nil (in-app), a free-running pulse is used instead.
+    var phase: Int? = nil
     @State private var animating = false
 
     private let heights: [CGFloat] = [6, 12, 8, 14]
+    // Per-step y-scale per bar — cycled by `phase` to read as flowing energy.
+    private let steps: [[CGFloat]] = [
+        [1.0, 0.45, 0.80, 0.55],
+        [0.55, 1.0, 0.45, 0.85],
+        [0.80, 0.60, 1.0, 0.50],
+        [0.45, 0.85, 0.60, 1.0],
+    ]
 
     var body: some View {
         HStack(alignment: .bottom, spacing: 2) {
@@ -66,21 +81,28 @@ struct FlowBars: View {
                 Capsule()
                     .fill(color)
                     .frame(width: 2.5, height: heights[i % 4])
-                    // Resting state = full height so the widget's static snapshot looks
-                    // right (Live Activities don't run repeating animations); in-app the
-                    // onAppear toggle drives the pulse.
-                    .scaleEffect(y: animating ? 0.45 : 1, anchor: .bottom)
-                    .opacity(animating ? 0.6 : 1)
-                    .animation(
-                        .easeInOut(duration: 0.9)
-                            .repeatForever(autoreverses: true)
-                            .delay(Double(i) * 0.12),
-                        value: animating
-                    )
+                    .scaleEffect(y: scaleY(i), anchor: .bottom)
+                    .opacity(phase == nil ? (animating ? 0.6 : 1) : 0.92)
+                    .animation(barAnimation(i), value: animationKey)
             }
         }
         .frame(height: 14, alignment: .bottom)
         .onAppear { animating = true }
+    }
+
+    private var animationKey: Int { phase ?? (animating ? 1 : 0) }
+
+    private func scaleY(_ i: Int) -> CGFloat {
+        if let phase { return steps[((phase % steps.count) + steps.count) % steps.count][i % 4] }
+        return animating ? 0.45 : 1   // in-app resting pulse
+    }
+
+    private func barAnimation(_ i: Int) -> Animation {
+        if phase != nil {
+            // Smooth interpolation between live updates.
+            return .easeInOut(duration: 0.5).delay(Double(i) * 0.04)
+        }
+        return .easeInOut(duration: 0.9).repeatForever(autoreverses: true).delay(Double(i) * 0.12)
     }
 }
 
@@ -98,7 +120,7 @@ struct EnergyIslandCompactLeading: View {
 struct EnergyIslandCompactTrailing: View {
     var trade = EnergyTrade()
     var body: some View {
-        FlowBars(color: trade.accent, count: 4)
+        FlowBars(color: trade.accent, count: 4, phase: trade.phase)
     }
 }
 
@@ -135,7 +157,7 @@ struct EnergyIslandSplit: View {
             .frame(height: 37)
             .background(.black, in: Capsule())
 
-            FlowBars(color: trade.accent, count: 3)
+            FlowBars(color: trade.accent, count: 3, phase: trade.phase)
                 .frame(width: 37, height: 37)
                 .background(.black, in: Circle())
         }
@@ -203,7 +225,7 @@ struct EnergyIslandExpanded: View {
 
     private var progressRow: some View {
         HStack(spacing: 10) {
-            FlowBars(color: trade.accent, count: 5)
+            FlowBars(color: trade.accent, count: 5, phase: trade.phase)
             GeometryReader { geo in
                 Capsule().fill(.white.opacity(0.12))
                     .overlay(alignment: .leading) {

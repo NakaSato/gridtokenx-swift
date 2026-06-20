@@ -54,19 +54,23 @@ gridtokexios/
 - `DesignSystem/GTXDesignTokens.swift` — `Color(hex:)`, `GTXColor` palette, `LinearGradient.gtxBrand`, `GTXPrimaryButtonStyle`. `DesignSystem/GTXComponents.swift` — shared `GTXBackButton` / `GTXTopGlow` / `GTXField`.
 - `Core/Inject.swift` — DEBUG hot-reload shim (`@ObserveInjection` + `.enableInjection()`); RELEASE compiles to no-ops.
 - `Core/Notifications/LiveActivityManager.swift` — starts/updates/ends the energy-trade Live Activity (`Activity<EnergyTradeAttributes>`). Local-driven (`pushType: nil`); `start` replaces any running activity.
+- `Core/Notifications/TxLiveActivityManager.swift` — shows/ends the transaction-success Live Activity (`Activity<TxReceiptAttributes>`); `show` replaces any running receipt and auto-ends after a delay. Wired to wallet Send/Deposit.
 - `Core/Notifications/NotificationManager.swift` — user notifications (`UNUserNotificationCenter`): `configure()` (auth + foreground-banner delegate `ForegroundPresenter`), `send(...)`/`sendSample()`. Tapped notifications with a `deeplink` payload re-broadcast via `didTapDeeplink` → RootView navigates. Local notifications need the one-time "Allow" tap (no simctl UI injection — grant manually in the sim).
 - `Features/Profile/ProfileWalletView.swift` — `07 · Profile & Wallet`. Portfolio hero, token holdings / activity tabs, account settings rows. Port of `mock-ui/wallet.jsx`. Reached from the Dashboard profile button.
 
 ### EnergyIslandWidget target
 
-Second target (app-extension, bundle `gridtokenx.gridtokexios.EnergyIslandWidget`) hosts the Dynamic Island / lock-screen Live Activity for energy trades. Added via `scripts/add_widget_target.rb` (Ruby `xcodeproj` gem — re-runnable, no-op if the target exists), NOT by hand-editing `project.pbxproj`. App embeds it and sets `INFOPLIST_KEY_NSSupportsLiveActivities = YES`.
+Second target (app-extension, bundle `gridtokenx.gridtokexios.EnergyIslandWidget`) hosts the Dynamic Island / lock-screen Live Activities. Added via `scripts/add_widget_target.rb` (Ruby `xcodeproj` gem — re-runnable, no-op if the target exists), NOT by hand-editing `project.pbxproj`. The widget group uses **explicit file references** (not a synced folder), so new files added there must be registered with `scripts/add_tx_island_files.rb` (idempotent — pattern to copy for any further widget files). App embeds the extension and sets `INFOPLIST_KEY_NSSupportsLiveActivities = YES`. The `WidgetBundle` hosts two activities: `EnergyIslandLiveActivity` + `TxLiveActivity`.
 
-- `EnergyIslandWidget/EnergyTradeIsland.swift` — **shared (app + widget)**: `EnergyTrade` model (Codable/Hashable, doubles as `ContentState`), island palette, `FlowBars`, and the compact/split/expanded SwiftUI subviews. Ported from `mock-ui/energy-island.jsx`.
+- `EnergyIslandWidget/EnergyTradeIsland.swift` — **shared (app + widget)**: `EnergyTrade` model (Codable/Hashable, doubles as `ContentState`; `phase` field drives the flow-bars pulse), island palette (`Color.island*`), `FlowBars`, and the compact/split/expanded SwiftUI subviews. Ported from `mock-ui/energy-island.jsx`. The OS won't run free-running animations in the island, so `LiveActivityManager` bumps `EnergyTrade.phase` on a ~0.7s timer and `FlowBars(phase:)` animates between those ContentState snapshots; in-app (no phase) it uses a `repeatForever` pulse.
 - `EnergyIslandWidget/EnergyTradeAttributes.swift` — **shared**: `ActivityAttributes` (`ContentState = EnergyTrade`).
 - `EnergyIslandWidget/EnergyIslandLiveActivity.swift` — widget-only: `ActivityConfiguration` (lock-screen/notification banner) + `DynamicIsland { compactLeading/compactTrailing/minimal/expanded }`.
+- `EnergyIslandWidget/TxReceiptIsland.swift` — **shared**: `TxReceipt` model (`ContentState`, send/receive), `CheckDisc`/`TxBadgeDisc`, and compact/expanded views. Transaction-success receipt — port of `mock-ui` `TxIslandCompact`/`TxIslandSuccess`.
+- `EnergyIslandWidget/TxReceiptAttributes.swift` — **shared**: `ActivityAttributes` (`ContentState = TxReceipt`).
+- `EnergyIslandWidget/TxLiveActivity.swift` — widget-only: second `ActivityConfiguration` + `DynamicIsland` for the TX receipt.
 - `EnergyIslandWidget/{EnergyIslandWidgetBundle.swift, ColorHex.swift, Info.plist}` — widget-only entry point, a `Color(hex:)` copy (the app gets it from `GTXDesignTokens`), and the `NSExtension` plist.
-- App triggers: Dashboard sell/buy buttons → `LiveActivityManager.start(...)` wired in `RootView`.
-- Dev hooks (DEBUG launch args): `START_ISLAND` → auto-start a sample Live Activity; `SEND_NOTIF` → fire a sample local notification (taps deep-link to wallet); `SHOW_WALLET` → jump straight to Profile & Wallet.
+- App triggers: Dashboard sell/buy → `LiveActivityManager.start(...)`; wallet Send/Deposit → `TxLiveActivityManager.show(...)` (receipt auto-ends after ~8s). Wired in `RootView`.
+- Dev hooks (DEBUG launch args): `START_ISLAND` → sample energy Live Activity; `TX_ISLAND` → sample TX-receipt island (send); `SEND_NOTIF` → sample local notification (taps deep-link to wallet); `SHOW_WALLET` → jump to Profile & Wallet.
 
 Data flow: each screen is self-contained with local `@State`; navigation state lives in `RootView`. Bypass creds for the signup flow are static placeholders — `CreateAccountView.bypassEmail`/`bypassPassword`, `VerifyEmailView.bypassCode` (419720).
 

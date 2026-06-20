@@ -10,6 +10,8 @@ import SwiftUI
 
 struct ProfileWalletView: View {
     var onBack: () -> Void = {}
+    var onSend: () -> Void = {}
+    var onReceive: () -> Void = {}
 
     @ObserveInjection var inject
     @State private var tab: Tab = .tokens
@@ -187,31 +189,35 @@ struct ProfileWalletView: View {
 
     private var actions: some View {
         HStack(spacing: 8) {
-            actionBtn("arrow.down", "Deposit", primary: true)
-            actionBtn("arrow.up", "Send")
+            actionBtn("arrow.down", "Deposit", primary: true, action: onReceive)
+            actionBtn("arrow.up", "Send", action: onSend)
             actionBtn("building.columns", "Withdraw")
             actionBtn("arrow.left.arrow.right", "Swap")
         }
     }
 
-    private func actionBtn(_ icon: String, _ label: String, primary: Bool = false) -> some View {
-        VStack(spacing: 8) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(primary ? AnyShapeStyle(W.grad) : AnyShapeStyle(W.surface))
-                if !primary {
-                    RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(W.border, lineWidth: 1)
+    private func actionBtn(_ icon: String, _ label: String, primary: Bool = false,
+                           action: @escaping () -> Void = {}) -> some View {
+        Button(action: action) {
+            VStack(spacing: 8) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(primary ? AnyShapeStyle(W.grad) : AnyShapeStyle(W.surface))
+                    if !primary {
+                        RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(W.border, lineWidth: 1)
+                    }
+                    Image(systemName: icon)
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundStyle(primary ? Color.white : W.violetSoft)
                 }
-                Image(systemName: icon)
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundStyle(primary ? Color.white : W.violetSoft)
+                .frame(height: 56)
+                .shadow(color: primary ? Color(hex: "#7C3AED", alpha: 0.4) : .clear, radius: 10, y: 8)
+                Text(label)
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(primary ? W.text : W.muted)
             }
-            .frame(height: 56)
-            .shadow(color: primary ? Color(hex: "#7C3AED", alpha: 0.4) : .clear, radius: 10, y: 8)
-            Text(label)
-                .font(.system(size: 12, weight: .semibold))
-                .foregroundStyle(primary ? W.text : W.muted)
         }
+        .buttonStyle(.plain)
         .frame(maxWidth: .infinity)
     }
 

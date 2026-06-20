@@ -12,5 +12,6 @@ import SwiftUI
 struct EnergyIslandWidgetBundle: WidgetBundle {
     var body: some Widget {
         EnergyIslandLiveActivity()
+        TxLiveActivity()
     }
 }
