@@ -47,6 +47,11 @@ struct RootView: View {
             if args.contains("TX_ISLAND") {
                 TxLiveActivityManager.show(TxReceipt(mode: .send))
             }
+            if args.contains("TX_ISLAND_RX") {
+                TxLiveActivityManager.show(TxReceipt(
+                    mode: .receive, amountGTX: 18, fiatText: "≈ ฿77.76",
+                    counterparty: "Noi", handle: "@noi.energy"))
+            }
             #endif
         }
     }

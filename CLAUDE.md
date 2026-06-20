@@ -70,7 +70,7 @@ Second target (app-extension, bundle `gridtokenx.gridtokexios.EnergyIslandWidget
 - `EnergyIslandWidget/TxLiveActivity.swift` — widget-only: second `ActivityConfiguration` + `DynamicIsland` for the TX receipt.
 - `EnergyIslandWidget/{EnergyIslandWidgetBundle.swift, ColorHex.swift, Info.plist}` — widget-only entry point, a `Color(hex:)` copy (the app gets it from `GTXDesignTokens`), and the `NSExtension` plist.
 - App triggers: Dashboard sell/buy → `LiveActivityManager.start(...)`; wallet Send/Deposit → `TxLiveActivityManager.show(...)` (receipt auto-ends after ~8s). Wired in `RootView`.
-- Dev hooks (DEBUG launch args): `START_ISLAND` → sample energy Live Activity; `TX_ISLAND` → sample TX-receipt island (send); `SEND_NOTIF` → sample local notification (taps deep-link to wallet); `SHOW_WALLET` → jump to Profile & Wallet.
+- Dev hooks (DEBUG launch args): `START_ISLAND` → sample energy Live Activity; `TX_ISLAND` / `TX_ISLAND_RX` → sample TX-receipt island (send / receive); `SEND_NOTIF` → sample local notification (taps deep-link to wallet); `SHOW_WALLET` → jump to Profile & Wallet.
 
 Data flow: each screen is self-contained with local `@State`; navigation state lives in `RootView`. Bypass creds for the signup flow are static placeholders — `CreateAccountView.bypassEmail`/`bypassPassword`, `VerifyEmailView.bypassCode` (419720).
 
