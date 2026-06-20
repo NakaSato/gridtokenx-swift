@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct RootView: View {
-    private enum Route { case welcome, createAccount, verify, profile, success, app }
+    private enum Route { case welcome, createAccount, verify, profile, success, app, profileWallet }
 
     @State private var route: Route = .welcome
     @State private var forward = true   // drives slide direction (push vs pop)
@@ -23,14 +23,29 @@ struct RootView: View {
                 .transition(pushPop)
         }
         .animation(.smooth(duration: 0.38), value: route)
-        #if DEBUG
-        .onAppear {
-            // Dev hook: auto-start a sample Live Activity for island verification.
-            if ProcessInfo.processInfo.arguments.contains("START_ISLAND") {
-                LiveActivityManager.start(EnergyTrade(side: .sell))
+        .onReceive(NotificationCenter.default.publisher(for: NotificationManager.didTapDeeplink)) { note in
+            // Deep-link from a tapped notification.
+            if (note.userInfo?["deeplink"] as? String) == "wallet" {
+                push(.profileWallet)
             }
         }
-        #endif
+        .onAppear {
+            // Register for user notifications (auth + foreground banner delegate).
+            NotificationManager.configure()
+            #if DEBUG
+            // Dev hooks: auto-start a sample Live Activity / fire a sample banner.
+            let args = ProcessInfo.processInfo.arguments
+            if args.contains("START_ISLAND") {
+                LiveActivityManager.start(EnergyTrade(side: .sell))
+            }
+            if args.contains("SEND_NOTIF") {
+                NotificationManager.sendSample()
+            }
+            if args.contains("SHOW_WALLET") {
+                route = .profileWallet
+            }
+            #endif
+        }
     }
 
     @ViewBuilder
@@ -67,8 +82,11 @@ struct RootView: View {
                 name: displayName,
                 onSell: { LiveActivityManager.start(EnergyTrade(side: .sell)) },
                 onBuy: { LiveActivityManager.start(
-                    EnergyTrade(side: .buy, ratePerKwh: 4.28, kwh: 3.2, progress: 0.42)) }
+                    EnergyTrade(side: .buy, ratePerKwh: 4.28, kwh: 3.2, progress: 0.42)) },
+                onProfile: { push(.profileWallet) }
             )
+        case .profileWallet:
+            ProfileWalletView(onBack: { pop(.app) })
         }
     }
 

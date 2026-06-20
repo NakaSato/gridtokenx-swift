@@ -13,7 +13,7 @@ struct DashboardView: View {
     var name: String = "Maya"
     var onSell: () -> Void = {}
     var onBuy: () -> Void = {}
-    var onAccessibility: () -> Void = {}
+    var onProfile: () -> Void = {}
 
     @ObserveInjection var inject
 
@@ -72,15 +72,15 @@ struct DashboardView: View {
                     .foregroundStyle(E.text)
             }
             Spacer()
-            Button(action: onAccessibility) {
-                Image(systemName: "figure.stand")
-                    .font(.system(size: 22, weight: .semibold))
+            Button(action: onProfile) {
+                Image(systemName: "person.crop.circle.fill")
+                    .font(.system(size: 26, weight: .semibold))
                     .foregroundStyle(E.violet)
                     .frame(width: 48, height: 48)
                     .background(E.surface, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                     .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(E.border, lineWidth: 1))
             }
-            .accessibilityLabel("Accessibility view")
+            .accessibilityLabel("Profile & Wallet")
         }
         .padding(.horizontal, 20)
         .padding(.top, 8)
