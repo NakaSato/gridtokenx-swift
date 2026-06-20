@@ -23,6 +23,14 @@ struct RootView: View {
                 .transition(pushPop)
         }
         .animation(.smooth(duration: 0.38), value: route)
+        #if DEBUG
+        .onAppear {
+            // Dev hook: auto-start a sample Live Activity for island verification.
+            if ProcessInfo.processInfo.arguments.contains("START_ISLAND") {
+                LiveActivityManager.start(EnergyTrade(side: .sell))
+            }
+        }
+        #endif
     }
 
     @ViewBuilder
@@ -55,7 +63,12 @@ struct RootView: View {
         case .success:
             SuccessView(name: displayName, onEnter: { push(.app) })
         case .app:
-            DashboardView(name: displayName)
+            DashboardView(
+                name: displayName,
+                onSell: { LiveActivityManager.start(EnergyTrade(side: .sell)) },
+                onBuy: { LiveActivityManager.start(
+                    EnergyTrade(side: .buy, ratePerKwh: 4.28, kwh: 3.2, progress: 0.42)) }
+            )
         }
     }
 

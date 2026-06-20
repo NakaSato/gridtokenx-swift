@@ -52,6 +52,18 @@ gridtokexios/
 - `Features/**` screen views — `WelcomeView`, `CreateAccountView`, `VerifyEmailView`, `ProfileView`, `SuccessView`, `DashboardView`. Each takes plain closures (`onContinue`, `onBack`, …); no shared store. New feature → new `Features/<Name>/` folder; add `ViewModel`/`Model` subfiles when logic lands.
 - `DesignSystem/GTXDesignTokens.swift` — `Color(hex:)`, `GTXColor` palette, `LinearGradient.gtxBrand`, `GTXPrimaryButtonStyle`. `DesignSystem/GTXComponents.swift` — shared `GTXBackButton` / `GTXTopGlow` / `GTXField`.
 - `Core/Inject.swift` — DEBUG hot-reload shim (`@ObserveInjection` + `.enableInjection()`); RELEASE compiles to no-ops.
+- `Core/LiveActivityManager.swift` — starts/updates/ends the energy-trade Live Activity (`Activity<EnergyTradeAttributes>`). Local-driven (`pushType: nil`); `start` replaces any running activity.
+
+### EnergyIslandWidget target
+
+Second target (app-extension, bundle `gridtokenx.gridtokexios.EnergyIslandWidget`) hosts the Dynamic Island / lock-screen Live Activity for energy trades. Added via `scripts/add_widget_target.rb` (Ruby `xcodeproj` gem — re-runnable, no-op if the target exists), NOT by hand-editing `project.pbxproj`. App embeds it and sets `INFOPLIST_KEY_NSSupportsLiveActivities = YES`.
+
+- `EnergyIslandWidget/EnergyTradeIsland.swift` — **shared (app + widget)**: `EnergyTrade` model (Codable/Hashable, doubles as `ContentState`), island palette, `FlowBars`, and the compact/split/expanded SwiftUI subviews. Ported from `mock-ui/energy-island.jsx`.
+- `EnergyIslandWidget/EnergyTradeAttributes.swift` — **shared**: `ActivityAttributes` (`ContentState = EnergyTrade`).
+- `EnergyIslandWidget/EnergyIslandLiveActivity.swift` — widget-only: `ActivityConfiguration` (lock-screen/notification banner) + `DynamicIsland { compactLeading/compactTrailing/minimal/expanded }`.
+- `EnergyIslandWidget/{EnergyIslandWidgetBundle.swift, ColorHex.swift, Info.plist}` — widget-only entry point, a `Color(hex:)` copy (the app gets it from `GTXDesignTokens`), and the `NSExtension` plist.
+- App triggers: Dashboard sell/buy buttons → `LiveActivityManager.start(...)` wired in `RootView`.
+- Dev hook (DEBUG launch arg): `START_ISLAND` → auto-start a sample Live Activity on launch.
 
 Data flow: each screen is self-contained with local `@State`; navigation state lives in `RootView`. Bypass creds for the signup flow are static placeholders — `CreateAccountView.bypassEmail`/`bypassPassword`, `VerifyEmailView.bypassCode` (419720).
 

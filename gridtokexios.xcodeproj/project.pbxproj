@@ -6,7 +6,26 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		03B5438104B0D5A92C92FB85 /* EnergyTradeIsland.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4C841FD96CAAD5888CEF2 /* EnergyTradeIsland.swift */; };
+		1AF977C3403EFCE95D8B8D2F /* EnergyTradeAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3759935088A511C5967114 /* EnergyTradeAttributes.swift */; };
+		256BAD4C823BCB6E6513E86A /* ColorHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540F986167AF5A0F6811FD7E /* ColorHex.swift */; };
+		2CCE2104E3B521107CDB11E0 /* EnergyTradeAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3759935088A511C5967114 /* EnergyTradeAttributes.swift */; };
+		34124EC2F11D4B2BB091C719 /* EnergyTradeIsland.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4C841FD96CAAD5888CEF2 /* EnergyTradeIsland.swift */; };
+		47382BF39BB1AE93C6F9096E /* EnergyIslandWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 715CC77014268F765DEC1E7C /* EnergyIslandWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A154DFAD7F96DDE2B6A4EF6B /* EnergyIslandWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFE070DF4359213D07772AE /* EnergyIslandWidgetBundle.swift */; };
+		E0DB39047D3317016CB0BDA4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F48C835D4201C7FABA5117E /* Foundation.framework */; };
+		F96C1E63F29066CAF20F6FD4 /* EnergyIslandLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14D8212448B2F5B191995F1 /* EnergyIslandLiveActivity.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
+		109A9E687046F3E1CDE87483 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 89D920EB2FE68FA1001C2748 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FC070220FD1C38D00852057A;
+			remoteInfo = EnergyIslandWidget;
+		};
 		89D921032FE68FA2001C2748 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 89D920EB2FE68FA1001C2748 /* Project object */;
@@ -23,25 +42,53 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		2E42FA4ED18150DE95AE443C /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				47382BF39BB1AE93C6F9096E /* EnergyIslandWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		1F48C835D4201C7FABA5117E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		2CE4C841FD96CAAD5888CEF2 /* EnergyTradeIsland.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EnergyTradeIsland.swift; sourceTree = "<group>"; };
+		540F986167AF5A0F6811FD7E /* ColorHex.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorHex.swift; sourceTree = "<group>"; };
+		715CC77014268F765DEC1E7C /* EnergyIslandWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = EnergyIslandWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		89D920F32FE68FA1001C2748 /* gridtokexios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = gridtokexios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		89D921022FE68FA2001C2748 /* gridtokexiosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = gridtokexiosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		89D9210C2FE68FA2001C2748 /* gridtokexiosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = gridtokexiosUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AAFE070DF4359213D07772AE /* EnergyIslandWidgetBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EnergyIslandWidgetBundle.swift; sourceTree = "<group>"; };
+		B14D8212448B2F5B191995F1 /* EnergyIslandLiveActivity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EnergyIslandLiveActivity.swift; sourceTree = "<group>"; };
+		B2DCA13A6830150C994DDE8E /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EE3759935088A511C5967114 /* EnergyTradeAttributes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EnergyTradeAttributes.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		89D920F52FE68FA1001C2748 /* gridtokexios */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = gridtokexios;
 			sourceTree = "<group>";
 		};
 		89D921052FE68FA2001C2748 /* gridtokexiosTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = gridtokexiosTests;
 			sourceTree = "<group>";
 		};
 		89D9210F2FE68FA2001C2748 /* gridtokexiosUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = gridtokexiosUITests;
 			sourceTree = "<group>";
 		};
@@ -69,9 +116,39 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CF7BD82B264AF25334E22E41 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E0DB39047D3317016CB0BDA4 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		08640B9B721A90F8AB97DFD5 /* EnergyIslandWidget */ = {
+			isa = PBXGroup;
+			children = (
+				2CE4C841FD96CAAD5888CEF2 /* EnergyTradeIsland.swift */,
+				EE3759935088A511C5967114 /* EnergyTradeAttributes.swift */,
+				540F986167AF5A0F6811FD7E /* ColorHex.swift */,
+				B14D8212448B2F5B191995F1 /* EnergyIslandLiveActivity.swift */,
+				AAFE070DF4359213D07772AE /* EnergyIslandWidgetBundle.swift */,
+				B2DCA13A6830150C994DDE8E /* Info.plist */,
+			);
+			name = EnergyIslandWidget;
+			path = EnergyIslandWidget;
+			sourceTree = SOURCE_ROOT;
+		};
+		1B42049BCA341C2C15736DEE /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				1F48C835D4201C7FABA5117E /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
 		89D920EA2FE68FA1001C2748 = {
 			isa = PBXGroup;
 			children = (
@@ -79,6 +156,8 @@
 				89D921052FE68FA2001C2748 /* gridtokexiosTests */,
 				89D9210F2FE68FA2001C2748 /* gridtokexiosUITests */,
 				89D920F42FE68FA1001C2748 /* Products */,
+				E21AFF9308BF924E70ADCF1F /* Frameworks */,
+				08640B9B721A90F8AB97DFD5 /* EnergyIslandWidget */,
 			);
 			sourceTree = "<group>";
 		};
@@ -88,8 +167,17 @@
 				89D920F32FE68FA1001C2748 /* gridtokexios.app */,
 				89D921022FE68FA2001C2748 /* gridtokexiosTests.xctest */,
 				89D9210C2FE68FA2001C2748 /* gridtokexiosUITests.xctest */,
+				715CC77014268F765DEC1E7C /* EnergyIslandWidget.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		E21AFF9308BF924E70ADCF1F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1B42049BCA341C2C15736DEE /* iOS */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -102,17 +190,17 @@
 				89D920EF2FE68FA1001C2748 /* Sources */,
 				89D920F02FE68FA1001C2748 /* Frameworks */,
 				89D920F12FE68FA1001C2748 /* Resources */,
+				2E42FA4ED18150DE95AE443C /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				97A67D14A633F4A8AE60F298 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				89D920F52FE68FA1001C2748 /* gridtokexios */,
 			);
 			name = gridtokexios;
-			packageProductDependencies = (
-			);
 			productName = gridtokexios;
 			productReference = 89D920F32FE68FA1001C2748 /* gridtokexios.app */;
 			productType = "com.apple.product-type.application";
@@ -134,8 +222,6 @@
 				89D921052FE68FA2001C2748 /* gridtokexiosTests */,
 			);
 			name = gridtokexiosTests;
-			packageProductDependencies = (
-			);
 			productName = gridtokexiosTests;
 			productReference = 89D921022FE68FA2001C2748 /* gridtokexiosTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -157,11 +243,26 @@
 				89D9210F2FE68FA2001C2748 /* gridtokexiosUITests */,
 			);
 			name = gridtokexiosUITests;
-			packageProductDependencies = (
-			);
 			productName = gridtokexiosUITests;
 			productReference = 89D9210C2FE68FA2001C2748 /* gridtokexiosUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		FC070220FD1C38D00852057A /* EnergyIslandWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5A801A060AE63C39617B3E9F /* Build configuration list for PBXNativeTarget "EnergyIslandWidget" */;
+			buildPhases = (
+				96C5C8B0CEC0CBF6073064EA /* Sources */,
+				CF7BD82B264AF25334E22E41 /* Frameworks */,
+				B52F26401A987F43B3F55C23 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EnergyIslandWidget;
+			productName = EnergyIslandWidget;
+			productReference = 715CC77014268F765DEC1E7C /* EnergyIslandWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -203,6 +304,7 @@
 				89D920F22FE68FA1001C2748 /* gridtokexios */,
 				89D921012FE68FA2001C2748 /* gridtokexiosTests */,
 				89D9210B2FE68FA2001C2748 /* gridtokexiosUITests */,
+				FC070220FD1C38D00852057A /* EnergyIslandWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -229,6 +331,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B52F26401A987F43B3F55C23 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -236,6 +345,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03B5438104B0D5A92C92FB85 /* EnergyTradeIsland.swift in Sources */,
+				1AF977C3403EFCE95D8B8D2F /* EnergyTradeAttributes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -253,6 +364,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		96C5C8B0CEC0CBF6073064EA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				34124EC2F11D4B2BB091C719 /* EnergyTradeIsland.swift in Sources */,
+				2CCE2104E3B521107CDB11E0 /* EnergyTradeAttributes.swift in Sources */,
+				256BAD4C823BCB6E6513E86A /* ColorHex.swift in Sources */,
+				F96C1E63F29066CAF20F6FD4 /* EnergyIslandLiveActivity.swift in Sources */,
+				A154DFAD7F96DDE2B6A4EF6B /* EnergyIslandWidgetBundle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -265,6 +388,12 @@
 			isa = PBXTargetDependency;
 			target = 89D920F22FE68FA1001C2748 /* gridtokexios */;
 			targetProxy = 89D9210D2FE68FA2001C2748 /* PBXContainerItemProxy */;
+		};
+		97A67D14A633F4A8AE60F298 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = EnergyIslandWidget;
+			target = FC070220FD1C38D00852057A /* EnergyIslandWidget */;
+			targetProxy = 109A9E687046F3E1CDE87483 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -397,6 +526,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -432,6 +562,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -534,9 +665,73 @@
 			};
 			name = Release;
 		};
+		99FA17D374307FC5AAF61780 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EnergyIslandWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Energy Island";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = gridtokenx.gridtokexios.EnergyIslandWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B6F4BDBB1F6622B86F5F5061 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EnergyIslandWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Energy Island";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = gridtokenx.gridtokexios.EnergyIslandWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		5A801A060AE63C39617B3E9F /* Build configuration list for PBXNativeTarget "EnergyIslandWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B6F4BDBB1F6622B86F5F5061 /* Release */,
+				99FA17D374307FC5AAF61780 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		89D920EE2FE68FA1001C2748 /* Build configuration list for PBXProject "gridtokexios" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
