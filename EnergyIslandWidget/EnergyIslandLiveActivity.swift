@@ -23,29 +23,19 @@ struct EnergyIslandLiveActivity: Widget {
         } dynamicIsland: { context in
             let trade = context.state
             return DynamicIsland {
-                // Expanded (long-press) — laid out across the island regions.
+                // Expanded (long-press) — the live-trade card laid across regions.
                 DynamicIslandExpandedRegion(.leading) {
-                    Label {
-                        Text(trade.title).font(.caption).fontWeight(.semibold)
-                    } icon: {
-                        Image(systemName: "bolt.fill").foregroundStyle(trade.accent)
-                    }
+                    EnergyExpandedLeading(trade: trade)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    Text(trade.rateText)
-                        .font(.system(.body, design: .monospaced).weight(.bold))
-                        .foregroundStyle(trade.accent)
+                    EnergyExpandedTrailing(trade: trade)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    HStack(spacing: 10) {
-                        FlowBars(color: trade.accent, count: 5, phase: trade.phase)
-                        ProgressView(value: trade.progress)
-                            .tint(trade.accent)
-                        Text("\(trade.kwh, specifier: "%.1f") kWh")
-                            .font(.system(.caption, design: .monospaced).weight(.bold))
-                            .foregroundStyle(.white)
+                    VStack(spacing: 12) {
+                        EnergyExpandedProgress(trade: trade)
+                        EnergyExpandedFooter(trade: trade)
                     }
-                    .padding(.top, 2)
+                    .padding(.top, 4)
                 }
             } compactLeading: {
                 EnergyIslandCompactLeading(trade: trade)

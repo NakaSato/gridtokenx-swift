@@ -128,24 +128,35 @@ struct EnergyIslandSplit: View {
 
 // MARK: - Expanded (full live activity)
 
+/// The full live-trade card (lock screen / notification banner). Composes the
+/// same region pieces the Dynamic Island long-press uses, so both stay in sync.
 struct EnergyIslandExpanded: View {
     var trade = EnergyTrade()
-    @State private var pulse = false
 
     var body: some View {
         VStack(spacing: 14) {
-            header
-            progressRow
-            footer
+            HStack(spacing: 12) {
+                EnergyExpandedLeading(trade: trade)
+                Spacer(minLength: 0)
+                EnergyExpandedTrailing(trade: trade)
+            }
+            EnergyExpandedProgress(trade: trade)
+            EnergyExpandedFooter(trade: trade)
         }
         .padding(EdgeInsets(top: 14, leading: 18, bottom: 16, trailing: 18))
         .frame(width: 360)
         .background(.black, in: RoundedRectangle(cornerRadius: 34, style: .continuous))
         .shadow(color: .black.opacity(0.6), radius: 25, y: 18)
-        .onAppear { pulse = true }
     }
+}
 
-    private var header: some View {
+/// Leading column: icon tile + title (with live dot) + zone. Used by the card
+/// header and the Dynamic Island expanded `.leading` region.
+struct EnergyExpandedLeading: View {
+    var trade = EnergyTrade()
+    @State private var pulse = false
+
+    var body: some View {
         HStack(spacing: 12) {
             RoundedRectangle(cornerRadius: 13, style: .continuous)
                 .fill(trade.accent.opacity(0.12))
@@ -171,21 +182,30 @@ struct EnergyIslandExpanded: View {
                     .font(.system(size: 12.5))
                     .foregroundStyle(Color.islandMuted)
             }
+        }
+        .onAppear { pulse = true }
+    }
+}
 
-            Spacer(minLength: 0)
-
-            VStack(alignment: .trailing, spacing: 1) {
-                Text(trade.rateText)
-                    .font(.system(size: 18, weight: .heavy, design: .monospaced))
-                    .foregroundStyle(trade.accent)
-                Text("per kWh")
-                    .font(.system(size: 11.5))
-                    .foregroundStyle(Color.islandFaint)
-            }
+/// Trailing column: signed rate + "per kWh".
+struct EnergyExpandedTrailing: View {
+    var trade = EnergyTrade()
+    var body: some View {
+        VStack(alignment: .trailing, spacing: 1) {
+            Text(trade.rateText)
+                .font(.system(size: 18, weight: .heavy, design: .monospaced))
+                .foregroundStyle(trade.accent)
+            Text("per kWh")
+                .font(.system(size: 11.5))
+                .foregroundStyle(Color.islandFaint)
         }
     }
+}
 
-    private var progressRow: some View {
+/// Progress row: flow-bars + capsule fill + kWh.
+struct EnergyExpandedProgress: View {
+    var trade = EnergyTrade()
+    var body: some View {
         HStack(spacing: 10) {
             FlowBars(color: trade.accent, count: 5, phase: trade.phase)
             GeometryReader { geo in
@@ -201,8 +221,12 @@ struct EnergyIslandExpanded: View {
                 .foregroundStyle(.white)
         }
     }
+}
 
-    private var footer: some View {
+/// Footer: earned/spent · live-for · counterparty stats.
+struct EnergyExpandedFooter: View {
+    var trade = EnergyTrade()
+    var body: some View {
         HStack(spacing: 18) {
             stat(trade.earnedLabel, trade.earnedText)
             stat("Live for", trade.liveFor)
