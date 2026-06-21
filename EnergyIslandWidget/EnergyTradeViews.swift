@@ -230,7 +230,7 @@ struct EnergyExpandedFooter: View {
         HStack(spacing: 18) {
             stat(trade.earnedLabel, trade.earnedText)
             stat("Live for", trade.liveFor)
-            stat("Counterparty", trade.counterparty)
+            stat("Counterparty", trade.counterpartyText)
             Spacer(minLength: 0)
         }
     }

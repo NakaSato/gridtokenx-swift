@@ -23,7 +23,8 @@ struct EnergyTrade: Codable, Hashable {
     var progress: Double = 0.68        // 0…1 fill
     var zone: String = "Zone 2"
     var liveFor: String = "6 min"
-    var counterparty: String = "4 buyers"
+    /// Empty → side-aware default ("4 buyers" selling / "4 sellers" buying).
+    var counterparty: String = ""
     /// Bumped on each live update to drive the flow-bars pulse in the island
     /// (the OS only animates between ContentState updates, not free-running).
     var phase: Int = 0
@@ -34,6 +35,10 @@ struct EnergyTrade: Codable, Hashable {
     /// Signed rate string, e.g. "+฿4.31" / "−฿4.28".
     var rateText: String { (selling ? "+฿" : "−฿") + String(format: "%.2f", ratePerKwh) }
     var earnedLabel: String { selling ? "Earned" : "Spent" }
+    /// Side-aware counterparty when not explicitly set.
+    var counterpartyText: String {
+        counterparty.isEmpty ? (selling ? "4 buyers" : "4 sellers") : counterparty
+    }
     var earnedText: String { (selling ? "+฿" : "−฿") + String(format: "%.2f", kwh * 4.3) }
 }
 
