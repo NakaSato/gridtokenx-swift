@@ -38,6 +38,10 @@ struct RootView: View {
             if args.contains("START_ISLAND") {
                 LiveActivityManager.start(EnergyTrade(side: .sell))
             }
+            if args.contains("START_ISLAND_BUY") {
+                LiveActivityManager.start(EnergyTrade(
+                    side: .buy, ratePerKwh: 4.28, kwh: 3.2, progress: 0.42))
+            }
             if args.contains("SEND_NOTIF") {
                 NotificationManager.sendSample()
             }
