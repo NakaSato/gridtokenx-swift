@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct RootView: View {
-    private enum Route { case welcome, createAccount, verify, profile, success, app, profileWallet, sentSuccess }
+    private enum Route { case welcome, createAccount, verify, profile, success, app, profileWallet, sentSuccess, dashboardLive, notifications, settings, dca, energyFlow, myHomeFlow }
 
     @State private var route: Route = .welcome
     @State private var forward = true   // drives slide direction (push vs pop)
@@ -50,6 +50,24 @@ struct RootView: View {
             }
             if args.contains("SHOW_SENT") {
                 route = .sentSuccess
+            }
+            if args.contains("SHOW_LIVE") {
+                route = .dashboardLive
+            }
+            if args.contains("SHOW_NOTIFS") {
+                route = .notifications
+            }
+            if args.contains("SHOW_SETTINGS") {
+                route = .settings
+            }
+            if args.contains("SHOW_DCA") {
+                route = .dca
+            }
+            if args.contains("SHOW_FLOW") {
+                route = .energyFlow
+            }
+            if args.contains("SHOW_HOME_FLOW") {
+                route = .myHomeFlow
             }
             if args.contains("TX_ISLAND") {
                 TxLiveActivityManager.show(TxReceipt(mode: .send))
@@ -95,11 +113,28 @@ struct RootView: View {
         case .app:
             DashboardView(
                 name: displayName,
-                onSell: { LiveActivityManager.start(EnergyTrade(side: .sell)) },
+                onSell: { push(.dashboardLive) },
                 onBuy: { LiveActivityManager.start(
                     EnergyTrade(side: .buy, ratePerKwh: 4.28, kwh: 3.2, progress: 0.42)) },
-                onProfile: { push(.profileWallet) }
+                onProfile: { push(.profileWallet) },
+                onFlow: { push(.energyFlow) }
             )
+        case .dashboardLive:
+            DashboardLiveView(
+                onBack: { pop(.app) },
+                initialSide: .sell,
+                onNotifications: { push(.notifications) },
+                onTrade: { LiveActivityManager.start($0) },
+                onSetupDCA: { push(.dca) }
+            )
+        case .dca:
+            DCAView(onBack: { pop(.dashboardLive) })
+        case .energyFlow:
+            EnergyFlowView(onBack: { pop(.app) }, onHome: { push(.myHomeFlow) })
+        case .myHomeFlow:
+            MyHomeFlowView(onBack: { pop(.energyFlow) })
+        case .notifications:
+            NotificationsView(onBack: { pop(.dashboardLive) })
         case .sentSuccess:
             ReceiptExpandedView(
                 tx: TxReceipt(mode: .send, amountGTX: 25, fiatText: "≈ ฿108.00",
@@ -113,8 +148,11 @@ struct RootView: View {
                               counterparty: "Somchai", handle: "@somchai_p")) },
                 onReceive: { notifyTx(
                     TxReceipt(mode: .receive, amountGTX: 18, fiatText: "≈ ฿77.76",
-                              counterparty: "Noi", handle: "@noi.energy")) }
+                              counterparty: "Noi", handle: "@noi.energy")) },
+                onSettings: { push(.settings) }
             )
+        case .settings:
+            SettingsView(onBack: { pop(.profileWallet) })
         }
     }
 

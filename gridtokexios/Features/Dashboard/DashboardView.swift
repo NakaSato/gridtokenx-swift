@@ -14,6 +14,7 @@ struct DashboardView: View {
     var onSell: () -> Void = {}
     var onBuy: () -> Void = {}
     var onProfile: () -> Void = {}
+    var onFlow: () -> Void = {}
 
     @ObserveInjection var inject
 
@@ -120,23 +121,30 @@ struct DashboardView: View {
     // MARK: - Solar status
 
     private var solarStatus: some View {
-        HStack(spacing: 16) {
-            iconTile("sun.max.fill", color: E.up, bg: E.upBg)
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Your solar is on")
-                    .font(.system(size: 19, weight: .bold))
-                    .foregroundStyle(E.text)
-                (Text("Producing ")
-                    + Text("5.2 kW").fontWeight(.bold).foregroundColor(E.text)
-                    + Text(" right now"))
-                    .font(.system(size: 15.5))
-                    .foregroundStyle(E.sub)
+        Button(action: onFlow) {
+            HStack(spacing: 16) {
+                iconTile("sun.max.fill", color: E.up, bg: E.upBg)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Your solar is on")
+                        .font(.system(size: 19, weight: .bold))
+                        .foregroundStyle(E.text)
+                    (Text("Producing ")
+                        + Text("5.2 kW").fontWeight(.bold).foregroundColor(E.text)
+                        + Text(" right now"))
+                        .font(.system(size: 15.5))
+                        .foregroundStyle(E.sub)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(E.sub.opacity(0.6))
             }
-            Spacer(minLength: 0)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
+            .cardBackground()
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 16)
-        .cardBackground()
+        .buttonStyle(.plain)
+        .accessibilityLabel("Energy flow")
     }
 
     // MARK: - Price
