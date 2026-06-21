@@ -45,16 +45,6 @@ struct RootView: View {
             if args.contains("SEND_NOTIF") {
                 NotificationManager.sendSample()
             }
-            if args.contains("SENT_NOTIF") {
-                NotificationManager.sendTxReceipt(
-                    TxReceipt(mode: .send, amountGTX: 25, fiatText: "≈ ฿108.00",
-                              counterparty: "Somchai", handle: "@somchai_p"))
-            }
-            if args.contains("SENT_NOTIF_RX") {
-                NotificationManager.sendTxReceipt(
-                    TxReceipt(mode: .receive, amountGTX: 18, fiatText: "≈ ฿77.76",
-                              counterparty: "Noi", handle: "@noi.energy"))
-            }
             if args.contains("SHOW_WALLET") {
                 route = .profileWallet
             }
@@ -128,13 +118,13 @@ struct RootView: View {
         }
     }
 
-    /// Fire a transaction receipt as both the Live Activity / Dynamic Island
-    /// (TxLiveActivityManager) and the rich push banner (NotificationManager).
-    /// Both are notification surfaces — nothing renders inside the wallet view.
+    /// Fire a transaction receipt as the Live Activity / Dynamic Island — the
+    /// surface that renders the `DI · Expanded` card. (A UNNotification banner
+    /// can't be restyled, so the receipt is the Live Activity only; nothing
+    /// renders inside the wallet view.)
     @MainActor
     private func notifyTx(_ tx: TxReceipt) {
         TxLiveActivityManager.show(tx)
-        NotificationManager.sendTxReceipt(tx)
     }
 
     // MARK: - Navigation

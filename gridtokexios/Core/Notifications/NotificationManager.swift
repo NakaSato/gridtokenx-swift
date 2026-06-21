@@ -10,8 +10,6 @@
 
 import Foundation
 import UserNotifications
-import SwiftUI
-import UIKit
 
 enum NotificationManager {
     private static var center: UNUserNotificationCenter { .current() }
@@ -40,54 +38,17 @@ enum NotificationManager {
     /// the system silently drops it. `delay` is seconds from now (min 1).
     /// `deeplink` (if set) routes the app when the banner is tapped.
     static func send(title: String, body: String, subtitle: String? = nil,
-                     deeplink: String? = nil, attachment: URL? = nil,
-                     after delay: TimeInterval = 1) {
+                     deeplink: String? = nil, after delay: TimeInterval = 1) {
         let content = UNMutableNotificationContent()
         content.title = title
         if let subtitle { content.subtitle = subtitle }
         content.body = body
         content.sound = .default
         if let deeplink { content.userInfo = ["deeplink": deeplink] }
-        if let attachment,
-           let att = try? UNNotificationAttachment(identifier: "receipt", url: attachment) {
-            content.attachments = [att]
-        }
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: max(1, delay), repeats: false)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
         center.add(request)
-    }
-
-    /// Push the `DI · Expanded (sent success / received)` receipt as a banner.
-    /// Renders the actual receipt card as the notification's rich attachment so
-    /// the expanded banner shows the DI card, not plain text. Taps open the wallet.
-    @MainActor
-    static func sendTxReceipt(_ tx: TxReceipt) {
-        send(
-            title: tx.title,                                   // "Sent successfully" / "Received"
-            body: "\(tx.who) · \(tx.amountText) GTX  \(tx.fiatText)",
-            subtitle: "GridTokenX",
-            deeplink: "wallet",
-            attachment: receiptImage(tx)
-        )
-    }
-
-    /// Render the receipt card (`TxIslandExpanded` on the black DI canvas) to a
-    /// PNG file for use as a notification attachment. Returns nil on failure.
-    @MainActor
-    private static func receiptImage(_ tx: TxReceipt) -> URL? {
-        let card = TxIslandExpanded(tx: tx)
-            .padding(EdgeInsets(top: 18, leading: 20, bottom: 18, trailing: 20))
-            .frame(width: 360)
-            .background(Color(hex: "#15101F"))
-
-        let renderer = ImageRenderer(content: card)
-        renderer.scale = 3
-        guard let image = renderer.uiImage, let data = image.pngData() else { return nil }
-
-        let url = FileManager.default.temporaryDirectory
-            .appendingPathComponent("receipt-\(UUID().uuidString).png")
-        do { try data.write(to: url); return url } catch { return nil }
     }
 
     /// Sample energy-trade notification for testing. Taps open Profile & Wallet.
