@@ -1,6 +1,28 @@
+# Xcode build
 build/
 DerivedData/
-.DS_Store
-xcuserdata/
 *.xcuserstate
+*.xcscmblueprint
+*.moved-aside
+
+# Xcode per-user state
+xcuserdata/
+*.xccheckout
+
+# Swift Package Manager
+.swiftpm/
+.build/
+Package.resolved
+
+# CocoaPods / Carthage (if added later)
+Pods/
+Carthage/Build/
+
+# macOS
+.DS_Store
+
+# Injection (hot reload)
+iOSInjectionProject/
+
+# Local reference assets (not part of the app target)
 mock-ui/
