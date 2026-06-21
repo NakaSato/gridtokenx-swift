@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct RootView: View {
-    private enum Route { case welcome, createAccount, verify, profile, success, app, profileWallet }
+    private enum Route { case welcome, createAccount, verify, profile, success, app, profileWallet, sentSuccess }
 
     @State private var route: Route = .welcome
     @State private var forward = true   // drives slide direction (push vs pop)
@@ -43,6 +43,9 @@ struct RootView: View {
             }
             if args.contains("SHOW_WALLET") {
                 route = .profileWallet
+            }
+            if args.contains("SHOW_SENT") {
+                route = .sentSuccess
             }
             if args.contains("TX_ISLAND") {
                 TxLiveActivityManager.show(TxReceipt(mode: .send))
@@ -93,6 +96,11 @@ struct RootView: View {
                     EnergyTrade(side: .buy, ratePerKwh: 4.28, kwh: 3.2, progress: 0.42)) },
                 onProfile: { push(.profileWallet) }
             )
+        case .sentSuccess:
+            ReceiptExpandedView(
+                tx: TxReceipt(mode: .send, amountGTX: 25, fiatText: "≈ ฿108.00",
+                              counterparty: "Somchai", handle: "@somchai_p"),
+                onBack: { pop(.profileWallet) })
         case .profileWallet:
             ProfileWalletView(
                 onBack: { pop(.app) },
