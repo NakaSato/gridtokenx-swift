@@ -51,6 +51,17 @@ enum NotificationManager {
         center.add(request)
     }
 
+    /// Push the `DI · Expanded (sent success / received)` receipt as a banner.
+    /// Title/body mirror the Live Activity card; taps open Profile & Wallet.
+    static func sendTxReceipt(_ tx: TxReceipt) {
+        send(
+            title: tx.title,                                   // "Sent successfully" / "Received"
+            body: "\(tx.who) · \(tx.amountText) GTX  \(tx.fiatText)",
+            subtitle: "GridTokenX",
+            deeplink: "wallet"
+        )
+    }
+
     /// Sample energy-trade notification for testing. Taps open Profile & Wallet.
     static func sendSample() {
         send(

@@ -45,6 +45,11 @@ struct RootView: View {
             if args.contains("SEND_NOTIF") {
                 NotificationManager.sendSample()
             }
+            if args.contains("SENT_NOTIF") {
+                NotificationManager.sendTxReceipt(
+                    TxReceipt(mode: .send, amountGTX: 25, fiatText: "≈ ฿108.00",
+                              counterparty: "Somchai", handle: "@somchai_p"))
+            }
             if args.contains("SHOW_WALLET") {
                 route = .profileWallet
             }
