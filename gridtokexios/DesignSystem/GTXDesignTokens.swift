@@ -45,12 +45,35 @@ enum GTXColor {
     static let buy         = Color(hex: "#2FD08A")   // up / positive
     static let sell        = Color(hex: "#FF5C6C")   // down / destructive
     static let warning     = Color(hex: "#FFD166")
+    static let gold        = Color(hex: "#E0A23C")   // kWh / energy credits
 
     // Light theme (Settings → Appearance: Light)
     static let lightBg     = Color(hex: "#EEE9F6")
     static let lightSurface = Color.white
     static let lightText   = Color(hex: "#1B1430")
     static let lightMuted  = Color(hex: "#1B1430", alpha: 0.55)
+
+    // Controls
+    static let disabled    = Color(hex: "#8C8C96", alpha: 0.32)   // toggle off / inert
+}
+
+// MARK: - Opacity ramp (white-on-dark surfaces & strokes)
+enum GTXOpacity {
+    static let surface:  Double = 0.05
+    static let surface2: Double = 0.07
+    static let border:   Double = 0.09
+    static let hairline: Double = 0.08
+    static let raised:   Double = 0.12
+    static let focusGlow: Double = 0.16
+    static let chip:     Double = 0.14
+}
+
+// MARK: - Brand glow shadow (gradient buttons / avatars)
+extension View {
+    /// Standard violet glow under brand-gradient surfaces.
+    func gtxBrandGlow(radius: CGFloat = 18, y: CGFloat = 10, strength: Double = 0.42) -> some View {
+        shadow(color: GTXColor.violetDeep.opacity(strength), radius: radius, y: y)
+    }
 }
 
 // MARK: - Brand gradient (135°, top-left → bottom-right)
@@ -79,13 +102,22 @@ enum GTXRadius {
 
 // MARK: - Type ramp (system SF Pro; monospace = SF Mono)
 enum GTXFont {
-    static let display = Font.system(size: 40, weight: .heavy)   // hero headlines
-    static let title   = Font.system(size: 28, weight: .bold)    // screen titles
-    static let heading = Font.system(size: 22, weight: .bold)
-    static let body    = Font.system(size: 16, weight: .regular)
-    static let label   = Font.system(size: 13, weight: .semibold)
-    static let caption = Font.system(size: 12, weight: .regular)
-    static let mono    = Font.system(size: 16, weight: .bold, design: .monospaced) // figures
+    static let display    = Font.system(size: 40, weight: .heavy)   // hero headlines
+    static let title      = Font.system(size: 28, weight: .bold)    // screen titles
+    static let heading    = Font.system(size: 22, weight: .bold)
+    static let subheading = Font.system(size: 17, weight: .semibold)
+    static let body       = Font.system(size: 16, weight: .regular)
+    static let bodyBold   = Font.system(size: 16, weight: .semibold)
+    static let label      = Font.system(size: 13, weight: .semibold)
+    static let caption    = Font.system(size: 12, weight: .regular)
+    static let section    = Font.system(size: 12, weight: .bold)    // uppercase section labels
+    static let mono       = Font.system(size: 16, weight: .bold, design: .monospaced) // figures
+}
+
+// MARK: - Universal layout (iPhone + iPad)
+enum GTXLayout {
+    /// Max content width on regular-width (iPad) so screens stay readable & centered.
+    static let contentMaxWidth: CGFloat = 640
 }
 
 // MARK: - Primary button style
