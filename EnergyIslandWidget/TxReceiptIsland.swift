@@ -39,25 +39,27 @@ struct TxReceipt: Codable, Hashable {
 
 // MARK: - Pieces
 
-/// Green success disc with a check mark.
+/// Green success disc with a check mark. Mirrors the mock `CheckDisc`
+/// (fill = color @ ~13%, 1.5pt ring, check ≈ 0.55× the disc).
 struct CheckDisc: View {
     var size: CGFloat = 44
     var color: Color = .islandUp
 
     var body: some View {
         Circle()
-            .fill(color.opacity(0.22))
-            .overlay(Circle().stroke(color, lineWidth: 1))
+            .fill(color.opacity(0.13))
+            .overlay(Circle().stroke(color, lineWidth: 1.5))
             .frame(width: size, height: size)
             .overlay(
                 Image(systemName: "checkmark")
-                    .font(.system(size: size * 0.4, weight: .heavy))
+                    .font(.system(size: size * 0.46, weight: .bold))
                     .foregroundStyle(color)
             )
     }
 }
 
-/// Success disc with a small directional badge (send/receive arrow).
+/// Success disc with a small directional badge — paper-plane for send (violet),
+/// tray-down for receive (green) — matching the mock's `DP.send`/`DP.receive`.
 struct TxBadgeDisc: View {
     let tx: TxReceipt
     var size: CGFloat = 44
@@ -70,8 +72,8 @@ struct TxBadgeDisc: View {
                     .frame(width: size * 0.45, height: size * 0.45)
                     .overlay(Circle().stroke(.black, lineWidth: 2.5))
                     .overlay(
-                        Image(systemName: tx.sending ? "arrow.up" : "arrow.down")
-                            .font(.system(size: size * 0.22, weight: .bold))
+                        Image(systemName: tx.sending ? "paperplane.fill" : "tray.and.arrow.down.fill")
+                            .font(.system(size: size * 0.2, weight: .bold))
                             .foregroundStyle(.white)
                     )
                     .offset(x: 3, y: 3)
@@ -103,7 +105,7 @@ struct TxIslandExpanded: View {
     let tx: TxReceipt
 
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 13) {
                 TxBadgeDisc(tx: tx, size: 44)
                 VStack(alignment: .leading, spacing: 2) {
@@ -125,6 +127,9 @@ struct TxIslandExpanded: View {
                         .foregroundStyle(Color.islandFaint)
                 }
             }
+            .padding(.bottom, 13)
+
+            Rectangle().fill(Color.white.opacity(0.1)).frame(height: 1)
 
             // settle line
             HStack(spacing: 8) {
@@ -138,10 +143,6 @@ struct TxIslandExpanded: View {
                     .foregroundStyle(Color.islandFaint)
             }
             .padding(.top, 12)
-            .overlay(alignment: .top) {
-                Rectangle().fill(Color.white.opacity(0.1)).frame(height: 1)
-            }
-            .padding(.top, 1)
         }
     }
 }
