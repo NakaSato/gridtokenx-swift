@@ -80,6 +80,49 @@ final class gridtokexiosUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Create account"].waitForExistence(timeout: 20), "Did not return to Welcome")
     }
 
+    // MARK: - 06 · Dashboard (live)
+
+    @MainActor
+    func testLiveDashboardRenders() throws {
+        let app = XCUIApplication()
+        app.launchArguments += ["SHOW_LIVE"]
+        app.launch()
+
+        XCTAssertTrue(app.staticTexts["GRX/THB"].waitForExistence(timeout: 10), "Live dashboard header missing")
+        XCTAssertTrue(app.buttons["Trade"].exists, "Trade tab missing")
+        XCTAssertTrue(app.buttons["Market"].exists, "Market tab missing")
+        XCTAssertTrue(app.buttons["Buy"].exists && app.buttons["Sell"].exists && app.buttons["DCA"].exists,
+                      "Side segment missing")
+    }
+
+    @MainActor
+    func testLiveDashboardSideSwitchUpdatesCTA() throws {
+        let app = XCUIApplication()
+        app.launchArguments += ["SHOW_LIVE"]
+        app.launch()
+
+        // SHOW_LIVE defaults to Buy → sticky CTA reads "Buy … kWh …".
+        let cta = app.buttons.matching(NSPredicate(format: "label CONTAINS 'kWh'")).firstMatch
+        XCTAssertTrue(cta.waitForExistence(timeout: 10), "CTA missing")
+        XCTAssertTrue(cta.label.hasPrefix("Buy"), "CTA should start as Buy, got \(cta.label)")
+
+        // Switch to Sell → CTA flips to "Sell …".
+        app.buttons["Sell"].tap()
+        let sellCTA = app.buttons.matching(NSPredicate(format: "label BEGINSWITH 'Sell' AND label CONTAINS 'kWh'")).firstMatch
+        XCTAssertTrue(sellCTA.waitForExistence(timeout: 5), "CTA did not switch to Sell")
+    }
+
+    @MainActor
+    func testLiveDashboardMarketTab() throws {
+        let app = XCUIApplication()
+        app.launchArguments += ["SHOW_LIVE"]
+        app.launch()
+
+        XCTAssertTrue(app.buttons["Market"].waitForExistence(timeout: 10), "Market tab missing")
+        app.buttons["Market"].tap()
+        XCTAssertTrue(app.staticTexts["P2P trade feed"].waitForExistence(timeout: 5), "Market feed missing")
+    }
+
     @MainActor
     func testLaunchPerformance() throws {
         // This measures how long it takes to launch your application.
