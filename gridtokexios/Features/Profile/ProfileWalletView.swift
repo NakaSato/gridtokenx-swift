@@ -5,6 +5,8 @@
 //  07 · Profile & Wallet — portfolio balance, token holdings, activity, and
 //  account settings. Native port of mock-ui/wallet.jsx.
 //
+//  Standardized on the GTX design system (tokens + GTXKit). No local palette.
+//
 
 import SwiftUI
 
@@ -12,35 +14,16 @@ struct ProfileWalletView: View {
     var onBack: () -> Void = {}
     var onSend: () -> Void = {}
     var onReceive: () -> Void = {}
+    var onSettings: () -> Void = {}
 
     @ObserveInjection var inject
     @State private var tab: Tab = .tokens
 
     private enum Tab { case tokens, activity }
 
-    // Wallet palette — shared dark + purple system; green/red = gains/losses.
-    private enum W {
-        static let bg = Color(hex: "#0B0712")
-        static let surface = Color.white.opacity(0.045)
-        static let surface2 = Color.white.opacity(0.07)
-        static let border = Color.white.opacity(0.09)
-        static let text = Color(hex: "#F4F1FA")
-        static let muted = Color(hex: "#F4F1FA", alpha: 0.54)
-        static let faint = Color(hex: "#F4F1FA", alpha: 0.32)
-        static let violet = Color(hex: "#9B6BFF")
-        static let violetSoft = Color(hex: "#C9B4FF")
-        static let up = Color(hex: "#2FD08A")
-        static let down = Color(hex: "#FF5C6C")
-        static let gold = Color(hex: "#E0A23C")
-        static let grad = LinearGradient(
-            colors: [Color(hex: "#A974FF"), Color(hex: "#7C3AED")],
-            startPoint: .topLeading, endPoint: .bottomTrailing
-        )
-    }
-
     var body: some View {
         ZStack {
-            W.bg.ignoresSafeArea()
+            GTXColor.bg.ignoresSafeArea()
 
             VStack(spacing: 0) {
                 topBar
@@ -57,6 +40,7 @@ struct ProfileWalletView: View {
                     .padding(.horizontal, 16)
                     .padding(.top, 16)
                     .padding(.bottom, 40)
+                    .gtxUniversalWidth()
                 }
             }
         }
@@ -72,29 +56,34 @@ struct ProfileWalletView: View {
             Button(action: onBack) {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 18, weight: .semibold))
-                    .foregroundStyle(W.text)
+                    .foregroundStyle(GTXColor.text)
                     .frame(width: 38, height: 38)
-                    .background(W.surface, in: RoundedRectangle(cornerRadius: 11, style: .continuous))
-                    .overlay(RoundedRectangle(cornerRadius: 11, style: .continuous).stroke(W.border, lineWidth: 1))
+                    .background(GTXColor.surface, in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 11, style: .continuous).stroke(GTXColor.border, lineWidth: 1))
             }
             .accessibilityLabel("Back")
 
             Text("Wallet")
-                .font(.system(size: 22, weight: .bold))
+                .font(GTXFont.heading)
                 .tracking(-0.4)
                 .padding(.leading, 4)
 
             Spacer()
 
-            RoundedRectangle(cornerRadius: 11, style: .continuous)
-                .fill(W.surface)
-                .frame(width: 38, height: 38)
-                .overlay(RoundedRectangle(cornerRadius: 11, style: .continuous).stroke(W.border, lineWidth: 1))
-                .overlay(Image(systemName: "gearshape").font(.system(size: 17)).foregroundStyle(W.muted))
+            Button(action: onSettings) {
+                RoundedRectangle(cornerRadius: 11, style: .continuous)
+                    .fill(GTXColor.surface)
+                    .frame(width: 38, height: 38)
+                    .overlay(RoundedRectangle(cornerRadius: 11, style: .continuous).stroke(GTXColor.border, lineWidth: 1))
+                    .overlay(Image(systemName: "gearshape").font(.system(size: 17)).foregroundStyle(GTXColor.muted))
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Settings")
         }
-        .foregroundStyle(W.text)
+        .foregroundStyle(GTXColor.text)
         .padding(.horizontal, 16)
         .padding(.top, 8)
+        .gtxUniversalWidth()
     }
 
     // MARK: - Profile
@@ -102,22 +91,22 @@ struct ProfileWalletView: View {
     private var profileRow: some View {
         HStack(spacing: 13) {
             Circle()
-                .fill(W.grad)
+                .fill(LinearGradient.gtxBrand)
                 .frame(width: 54, height: 54)
                 .overlay(Text("MC").font(.system(size: 20, weight: .bold)).foregroundStyle(.white))
-                .shadow(color: Color(hex: "#7C3AED", alpha: 0.45), radius: 12, y: 6)
+                .gtxBrandGlow(radius: 12, y: 6, strength: 0.45)
             VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 6) {
                     Text("Maya Chen").font(.system(size: 18, weight: .bold))
                     Image(systemName: "checkmark.seal.fill")
-                        .font(.system(size: 15)).foregroundStyle(W.violet)
+                        .font(.system(size: 15)).foregroundStyle(GTXColor.violet)
                 }
                 Text("Prosumer · Zone 2 · Bangkok")
-                    .font(.system(size: 13)).foregroundStyle(W.muted)
+                    .font(GTXFont.label).foregroundStyle(GTXColor.muted)
             }
             Spacer()
         }
-        .foregroundStyle(W.text)
+        .foregroundStyle(GTXColor.text)
     }
 
     // MARK: - Balance hero
@@ -129,7 +118,7 @@ struct ProfileWalletView: View {
     private var balanceHero: some View {
         let total = alloc.reduce(0) { $0 + $1.1 }
         return ZStack(alignment: .topTrailing) {
-            Circle().fill(Color.white.opacity(0.12))
+            Circle().fill(Color.white.opacity(GTXOpacity.raised))
                 .frame(width: 150, height: 150)
                 .offset(x: 30, y: -40)
             VStack(alignment: .leading, spacing: 0) {
@@ -180,9 +169,9 @@ struct ProfileWalletView: View {
             .padding(.horizontal, 20)
             .padding(.top, 20).padding(.bottom, 18)
         }
-        .background(W.grad)
+        .background(LinearGradient.gtxBrand)
         .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .shadow(color: Color(hex: "#7C3AED", alpha: 0.4), radius: 20, y: 14)
+        .gtxBrandGlow(radius: 20, y: 14, strength: 0.4)
     }
 
     // MARK: - Actions
@@ -202,19 +191,19 @@ struct ProfileWalletView: View {
             VStack(spacing: 8) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .fill(primary ? AnyShapeStyle(W.grad) : AnyShapeStyle(W.surface))
+                        .fill(primary ? AnyShapeStyle(LinearGradient.gtxBrand) : AnyShapeStyle(GTXColor.surface))
                     if !primary {
-                        RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(W.border, lineWidth: 1)
+                        RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(GTXColor.border, lineWidth: 1)
                     }
                     Image(systemName: icon)
                         .font(.system(size: 20, weight: .semibold))
-                        .foregroundStyle(primary ? Color.white : W.violetSoft)
+                        .foregroundStyle(primary ? Color.white : GTXColor.violetSoft)
                 }
                 .frame(height: 56)
-                .shadow(color: primary ? Color(hex: "#7C3AED", alpha: 0.4) : .clear, radius: 10, y: 8)
+                .gtxBrandGlow(radius: 10, y: 8, strength: primary ? 0.4 : 0)
                 Text(label)
                     .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(primary ? W.text : W.muted)
+                    .foregroundStyle(primary ? GTXColor.text : GTXColor.muted)
             }
         }
         .buttonStyle(.plain)
@@ -228,15 +217,14 @@ struct ProfileWalletView: View {
             ForEach(Array([("Sold", "84 kWh", false), ("Earned", "฿362", false), ("CO₂ saved", "18.4 kg", true)].enumerated()), id: \.offset) { _, s in
                 VStack(alignment: .leading, spacing: 4) {
                     Text(s.0.uppercased())
-                        .font(.system(size: 10.5)).tracking(0.3).foregroundStyle(W.muted)
+                        .font(.system(size: 10.5)).tracking(0.3).foregroundStyle(GTXColor.muted)
                     Text(s.1)
                         .font(.system(size: 17, weight: .bold, design: .monospaced))
-                        .foregroundStyle(s.2 ? W.up : W.text)
+                        .foregroundStyle(s.2 ? GTXColor.buy : GTXColor.text)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 13).padding(.vertical, 12)
-                .background(W.surface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).stroke(W.border, lineWidth: 1))
+                .gtxCard(radius: 14, padding: nil)
             }
         }
     }
@@ -249,8 +237,7 @@ struct ProfileWalletView: View {
             segBtn(.activity, "Activity")
         }
         .padding(5)
-        .background(W.surface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).stroke(W.border, lineWidth: 1))
+        .gtxCard(radius: 14, padding: nil)
     }
 
     private func segBtn(_ t: Tab, _ label: String) -> some View {
@@ -258,12 +245,12 @@ struct ProfileWalletView: View {
         return Button { withAnimation(.easeInOut(duration: 0.15)) { tab = t } } label: {
             Text(label)
                 .font(.system(size: 14.5, weight: .semibold))
-                .foregroundStyle(on ? Color.white : W.muted)
+                .foregroundStyle(on ? Color.white : GTXColor.muted)
                 .frame(maxWidth: .infinity).frame(height: 38)
                 .background {
                     if on {
-                        RoundedRectangle(cornerRadius: 10, style: .continuous).fill(W.grad)
-                            .shadow(color: Color(hex: "#7C3AED", alpha: 0.4), radius: 7, y: 4)
+                        RoundedRectangle(cornerRadius: 10, style: .continuous).fill(LinearGradient.gtxBrand)
+                            .gtxBrandGlow(radius: 7, y: 4, strength: 0.4)
                     }
                 }
         }
@@ -285,12 +272,11 @@ struct ProfileWalletView: View {
                 }
             }
         }
-        .background(W.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(W.border, lineWidth: 1))
+        .gtxCard(radius: 18, padding: nil)
     }
 
     private func divider(_ leading: CGFloat) -> some View {
-        Rectangle().fill(W.border).frame(height: 1).padding(.leading, leading)
+        Rectangle().fill(GTXColor.border).frame(height: 1).padding(.leading, leading)
     }
 
     // Holdings
@@ -298,7 +284,7 @@ struct ProfileWalletView: View {
     private var holdings: [Holding] {
         [
             Holding(mark: AnyView(gtxGlyph), name: "GridTokenX", sub: "968.40 GTX", value: "฿4,182", amount: "+2.45%", change: 1),
-            Holding(mark: AnyView(markIcon("bolt.fill", W.gold, bg: W.gold.opacity(0.18), border: W.gold.opacity(0.4))),
+            Holding(mark: AnyView(markIcon("bolt.fill", GTXColor.gold, bg: GTXColor.gold.opacity(0.18), border: GTXColor.gold.opacity(0.4))),
                     name: "kWh credits", sub: "Tradeable energy", value: "12.4 kWh", amount: "≈ ฿53.50", change: 0),
             Holding(mark: AnyView(markText("฿")), name: "THB cash", sub: "Settlement balance", value: "฿320.00", amount: "Available", change: 0),
         ]
@@ -309,17 +295,17 @@ struct ProfileWalletView: View {
             h.mark
             VStack(alignment: .leading, spacing: 2) {
                 Text(h.name).font(.system(size: 15.5, weight: .semibold))
-                Text(h.sub).font(.system(size: 12.5)).foregroundStyle(W.faint)
+                Text(h.sub).font(.system(size: 12.5)).foregroundStyle(GTXColor.faint)
             }
             Spacer()
             VStack(alignment: .trailing, spacing: 2) {
                 Text(h.value).font(.system(size: 15, weight: .bold, design: .monospaced))
                 Text(h.amount)
                     .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(h.change > 0 ? W.up : h.change < 0 ? W.down : W.faint)
+                    .foregroundStyle(h.change > 0 ? GTXColor.buy : h.change < 0 ? GTXColor.sell : GTXColor.faint)
             }
         }
-        .foregroundStyle(W.text)
+        .foregroundStyle(GTXColor.text)
         .padding(.horizontal, 16).padding(.vertical, 14)
     }
 
@@ -332,7 +318,7 @@ struct ProfileWalletView: View {
             }
         }
         .frame(width: 40, height: 40)
-        .background(W.grad, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .background(LinearGradient.gtxBrand, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 
     private func markIcon(_ icon: String, _ color: Color, bg: Color, border: Color) -> some View {
@@ -343,10 +329,10 @@ struct ProfileWalletView: View {
     }
 
     private func markText(_ s: String) -> some View {
-        Text(s).font(.system(size: 18, weight: .heavy, design: .monospaced)).foregroundStyle(W.violetSoft)
+        Text(s).font(.system(size: 18, weight: .heavy, design: .monospaced)).foregroundStyle(GTXColor.violetSoft)
             .frame(width: 40, height: 40)
-            .background(W.surface2, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).stroke(W.border, lineWidth: 1))
+            .background(GTXColor.surface2, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).stroke(GTXColor.border, lineWidth: 1))
     }
 
     // Transactions
@@ -360,15 +346,15 @@ struct ProfileWalletView: View {
     ]
 
     private func txnRow(_ t: Txn) -> some View {
-        let c = t.pos ? W.up : W.down
+        let c = t.pos ? GTXColor.buy : GTXColor.sell
         return HStack(spacing: 13) {
             Image(systemName: t.into ? "arrow.down" : "arrow.up")
                 .font(.system(size: 15, weight: .semibold)).foregroundStyle(c)
                 .frame(width: 36, height: 36)
-                .background(c.opacity(0.14), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+                .background(c.opacity(GTXOpacity.chip), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
             VStack(alignment: .leading, spacing: 2) {
-                Text(t.title).font(.system(size: 14.5, weight: .semibold)).foregroundStyle(W.text)
-                Text(t.sub).font(.system(size: 12)).foregroundStyle(W.faint)
+                Text(t.title).font(.system(size: 14.5, weight: .semibold)).foregroundStyle(GTXColor.text)
+                Text(t.sub).font(.system(size: 12)).foregroundStyle(GTXColor.faint)
             }
             Spacer()
             Text(t.amt).font(.system(size: 14.5, weight: .bold, design: .monospaced)).foregroundStyle(c)
@@ -390,21 +376,20 @@ struct ProfileWalletView: View {
                 if i > 0 { divider(60) }
                 HStack(spacing: 13) {
                     Image(systemName: row.0)
-                        .font(.system(size: 16)).foregroundStyle(W.violetSoft)
+                        .font(.system(size: 16)).foregroundStyle(GTXColor.violetSoft)
                         .frame(width: 32, height: 32)
-                        .background(W.violet.opacity(0.12), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
-                    Text(row.1).font(.system(size: 14.5, weight: .medium)).foregroundStyle(W.text)
+                        .background(GTXColor.violet.opacity(GTXOpacity.raised), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+                    Text(row.1).font(.system(size: 14.5, weight: .medium)).foregroundStyle(GTXColor.text)
                     Spacer()
                     if !row.2.isEmpty {
-                        Text(row.2).font(.system(size: 13)).foregroundStyle(W.muted).padding(.trailing, 4)
+                        Text(row.2).font(.system(size: 13)).foregroundStyle(GTXColor.muted).padding(.trailing, 4)
                     }
-                    Image(systemName: "chevron.right").font(.system(size: 14, weight: .semibold)).foregroundStyle(W.faint)
+                    Image(systemName: "chevron.right").font(.system(size: 14, weight: .semibold)).foregroundStyle(GTXColor.faint)
                 }
                 .padding(.horizontal, 16).padding(.vertical, 14)
             }
         }
-        .background(W.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(W.border, lineWidth: 1))
+        .gtxCard(radius: 18, padding: nil)
     }
 }
 
