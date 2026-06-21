@@ -13,6 +13,7 @@ import SwiftUI
 
 struct BillingView: View {
     var onBack: () -> Void = {}
+    var onHistory: () -> Void = {}
 
     @ObserveInjection var inject
 
@@ -229,26 +230,30 @@ struct BillingView: View {
             VStack(spacing: 0) {
                 ForEach(Array(history.enumerated()), id: \.offset) { i, h in
                     if i > 0 { divider }
-                    HStack(spacing: 13) {
-                        Image(systemName: "doc.text")
-                            .font(.system(size: 16, weight: .regular)).foregroundStyle(BL.muted)
-                            .frame(width: 34, height: 34)
-                            .background(BL.surface2, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-                            .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous).stroke(BL.border, lineWidth: 1))
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(h.month).font(.system(size: 14.5, weight: .semibold)).foregroundStyle(BL.text)
-                            HStack(spacing: 5) {
-                                Image(systemName: "checkmark").font(.system(size: 10, weight: .heavy))
-                                Text("Paid").font(.system(size: 12))
+                    Button(action: onHistory) {
+                        HStack(spacing: 13) {
+                            Image(systemName: "doc.text")
+                                .font(.system(size: 16, weight: .regular)).foregroundStyle(BL.muted)
+                                .frame(width: 34, height: 34)
+                                .background(BL.surface2, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous).stroke(BL.border, lineWidth: 1))
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(h.month).font(.system(size: 14.5, weight: .semibold)).foregroundStyle(BL.text)
+                                HStack(spacing: 5) {
+                                    Image(systemName: "checkmark").font(.system(size: 10, weight: .heavy))
+                                    Text("Paid").font(.system(size: 12))
+                                }
+                                .foregroundStyle(BL.up)
                             }
-                            .foregroundStyle(BL.up)
+                            Spacer(minLength: 8)
+                            Text("฿\(BillStatement.group(h.amount))")
+                                .font(.system(size: 14.5, weight: .bold, design: .monospaced)).foregroundStyle(BL.muted)
+                            Image(systemName: "chevron.right").font(.system(size: 14, weight: .semibold)).foregroundStyle(BL.faint)
                         }
-                        Spacer(minLength: 8)
-                        Text("฿\(BillStatement.group(h.amount))")
-                            .font(.system(size: 14.5, weight: .bold, design: .monospaced)).foregroundStyle(BL.muted)
-                        Image(systemName: "chevron.right").font(.system(size: 14, weight: .semibold)).foregroundStyle(BL.faint)
+                        .padding(.horizontal, 16).padding(.vertical, 14)
+                        .contentShape(Rectangle())
                     }
-                    .padding(.horizontal, 16).padding(.vertical, 14)
+                    .buttonStyle(.plain)
                 }
             }
             .background(BL.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))

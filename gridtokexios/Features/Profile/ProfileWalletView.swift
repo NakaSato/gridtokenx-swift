@@ -13,7 +13,8 @@ import SwiftUI
 struct ProfileWalletView: View {
     var onBack: () -> Void = {}
     var onSend: () -> Void = {}
-    var onReceive: () -> Void = {}
+    var onDeposit: () -> Void = {}
+    var onWithdraw: () -> Void = {}
     var onSettings: () -> Void = {}
 
     @ObserveInjection var inject
@@ -178,9 +179,9 @@ struct ProfileWalletView: View {
 
     private var actions: some View {
         HStack(spacing: 8) {
-            actionBtn("arrow.down", "Deposit", primary: true, action: onReceive)
+            actionBtn("arrow.down", "Deposit", primary: true, action: onDeposit)
             actionBtn("arrow.up", "Send", action: onSend)
-            actionBtn("building.columns", "Withdraw")
+            actionBtn("building.columns", "Withdraw", action: onWithdraw)
             actionBtn("arrow.left.arrow.right", "Swap")
         }
     }

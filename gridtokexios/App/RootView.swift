@@ -176,33 +176,38 @@ struct RootView: View {
                 onSend: { notifyTx(
                     TxReceipt(mode: .send, amountGTX: 25, fiatText: "≈ ฿108.00",
                               counterparty: "Somchai", handle: "@somchai_p")) },
-                onReceive: { notifyTx(
-                    TxReceipt(mode: .receive, amountGTX: 18, fiatText: "≈ ฿77.76",
-                              counterparty: "Noi", handle: "@noi.energy")) },
+                onDeposit: { push(.deposit) },
+                onWithdraw: { push(.withdraw) },
                 onSettings: { push(.settings) }
             )
         case .settings:
             SettingsView(
                 onBack: { pop(.profileWallet) },
-                onVerifyNDID: { push(.ndid) })
+                onVerifyNDID: { push(.ndid) },
+                onOpenRegister: { push(.register) },
+                onOpenBilling: { push(.billing) },
+                onOpenOrders: { push(.orders) },
+                onOpenGridMap: { push(.gridMap) })
         case .ndid:
             NDIDView(
                 onBack: { pop(.settings) },
-                onVerified: { pop(.settings) })
+                onVerified: { push(.ndidProfile) })
         case .ndidProfile:
             NDIDProfileView(onBack: { pop(.settings) })
         case .billing:
-            BillingView(onBack: { pop(.app) })
+            BillingView(
+                onBack: { pop(.settings) },
+                onHistory: { push(.billingHistory) })
         case .billingHistory:
-            BillingHistoryView(onBack: { pop(.app) })
+            BillingHistoryView(onBack: { pop(.billing) })
         case .deposit:
             DepositView(onBack: { pop(.profileWallet) })
         case .withdraw:
             WithdrawView(onBack: { pop(.profileWallet) })
         case .gridMap:
-            GridMapView(onBack: { pop(.app) })
+            GridMapView(onBack: { pop(.settings) })
         case .orders:
-            OrderHistoryView(onBack: { pop(.app) })
+            OrderHistoryView(onBack: { pop(.settings) })
         case .dashboardEasy:
             DashboardEasyView(name: displayName, onBack: { pop(.app) })
         case .register:

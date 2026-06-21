@@ -13,6 +13,10 @@ import SwiftUI
 struct SettingsView: View {
     var onBack: () -> Void = {}
     var onVerifyNDID: () -> Void = {}
+    var onOpenRegister: () -> Void = {}
+    var onOpenBilling: () -> Void = {}
+    var onOpenOrders: () -> Void = {}
+    var onOpenGridMap: () -> Void = {}
 
     @ObserveInjection var inject
 
@@ -77,7 +81,9 @@ struct SettingsView: View {
                         profileCard
 
                         section("Energy & grid") {
-                            row("gauge.medium", "Linked meter", detail: "Solar 5.2 kW")
+                            row("gauge.medium", "Linked meter", detail: "Solar 5.2 kW") { onOpenRegister() }
+                            divider(56)
+                            row("map", "Grid map") { onOpenGridMap() }
                             divider(56)
                             row("mappin.and.ellipse", "Trading zone", detail: zoneLabel) { zonePicker = true }
                             divider(56)
@@ -88,6 +94,10 @@ struct SettingsView: View {
 
                         section("Wallet & payments") {
                             row("creditcard", "Payout method", detail: "SCB ••4192")
+                            divider(56)
+                            row("doc.text", "Bills & statements") { onOpenBilling() }
+                            divider(56)
+                            row("list.bullet.rectangle", "Order history") { onOpenOrders() }
                             divider(56)
                             row("dollarsign.circle", "Currency", detail: "THB ฿")
                             divider(56)
