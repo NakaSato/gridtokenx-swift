@@ -26,7 +26,7 @@ struct CheckDisc: View {
             .frame(width: size, height: size)
             .overlay(
                 Image(systemName: "checkmark")
-                    .font(.system(size: size * 0.46, weight: .bold))
+                    .font(.system(size: size * 0.55, weight: .bold))
                     .foregroundStyle(color)
             )
     }
@@ -47,7 +47,7 @@ struct TxBadgeDisc: View {
                     .overlay(Circle().stroke(.black, lineWidth: 2.5))
                     .overlay(
                         Image(systemName: tx.sending ? "paperplane.fill" : "tray.and.arrow.down.fill")
-                            .font(.system(size: size * 0.2, weight: .bold))
+                            .font(.system(size: size * 0.23, weight: .bold))
                             .foregroundStyle(.white)
                     )
                     .offset(x: 3, y: 3)

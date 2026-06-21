@@ -50,6 +50,6 @@ extension Color {
     static let islandViolet = Color(hex: "9B6BFF")
     static let islandVioletSoft = Color(hex: "C9B4FF")
     static let islandText    = Color(hex: "F4F1FA")
-    static let islandMuted   = Color(white: 1, opacity: 0.6)
-    static let islandFaint   = Color(white: 1, opacity: 0.4)
+    static let islandMuted   = Color(hex: "F4F1FA", alpha: 0.6)   // rgba(244,241,250,.6)
+    static let islandFaint   = Color(hex: "F4F1FA", alpha: 0.4)   // rgba(244,241,250,.4)
 }
