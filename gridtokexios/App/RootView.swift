@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct RootView: View {
-    private enum Route { case welcome, createAccount, verify, profile, success, app, profileWallet, sentSuccess, dashboardLive, notifications, settings, dca, energyFlow, myHomeFlow, ndid, ndidProfile, billing, billingHistory, deposit, withdraw, gridMap, orders, dashboardEasy, register }
+    private enum Route { case welcome, createAccount, verify, profile, success, app, profileWallet, sentSuccess, dashboardLive, notifications, settings, dca, energyFlow, myHomeFlow, ndid, ndidProfile, billing, billingHistory, deposit, withdraw, gridMap, orders, register }
 
     @State private var route: Route = .welcome
     @State private var forward = true   // drives slide direction (push vs pop)
@@ -92,9 +92,6 @@ struct RootView: View {
             }
             if args.contains("SHOW_ORDERS") {
                 route = .orders
-            }
-            if args.contains("SHOW_DASHBOARD_EASY") {
-                route = .dashboardEasy
             }
             if args.contains("SHOW_REGISTER") {
                 route = .register
@@ -208,8 +205,6 @@ struct RootView: View {
             GridMapView(onBack: { pop(.settings) })
         case .orders:
             OrderHistoryView(onBack: { pop(.settings) })
-        case .dashboardEasy:
-            DashboardEasyView(name: displayName, onBack: { pop(.app) })
         case .register:
             RegisterDeviceView(onBack: { pop(.settings) })
         }
