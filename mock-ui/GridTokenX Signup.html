@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GridTokenX — Signup Flow</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #F0EEF5; }
+  * { box-sizing: border-box; }
+  @keyframes gtxPulse { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(4.2); opacity: 0; } }
+  .gtx-pulse { animation: gtxPulse 1.8s ease-out infinite; }
+  @keyframes gtxFlow { to { stroke-dashoffset: -8; } }
+  .gtx-flow { animation: gtxFlow 0.9s linear infinite; }
+  @keyframes gtxBlink { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+  .gtx-blink { animation: gtxBlink 1.4s ease-in-out infinite; }
+  @keyframes gtxScan { 0% { top: 16%; } 50% { top: 78%; } 100% { top: 16%; } }
+  .gtx-scan { animation: gtxScan 2.2s ease-in-out infinite; }
+  @keyframes gtxSpin { to { transform: rotate(360deg); } }
+  .gtx-spin { animation: gtxSpin 1s linear infinite; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="screens.jsx"></script>
+<script type="text/babel" src="dashboard.jsx"></script>
+<script type="text/babel" src="wallet.jsx"></script>
+<script type="text/babel" src="settings.jsx"></script>
+<script type="text/babel" src="transfer.jsx"></script>
+<script type="text/babel" src="dashboard-easy.jsx"></script>
+<script type="text/babel" src="register.jsx"></script>
+<script type="text/babel" src="dca.jsx"></script>
+<script type="text/babel" src="ndid.jsx"></script>
+<script type="text/babel" src="ndid-profile.jsx"></script>
+<script type="text/babel" src="extra-screens.jsx"></script>
+<script type="text/babel" src="energy-flow.jsx"></script>
+<script type="text/babel" src="billing.jsx"></script>
+<script type="text/babel" src="billing-history.jsx"></script>
+<script type="text/babel" src="energy-island.jsx"></script>
+
+<script type="text/babel">
+  const { useState } = React;
+
+  const SCREENS = [
+    ['01 · Welcome',        Welcome],
+    ['02 · Create account', CreateAccount],
+    ['03 · Verify email',   Verify],
+    ['04 · Your profile',   Profile],
+    ['05 · You\u2019re in',  Success],
+  ];
+
+  const DASH = ['06 · Dashboard (live)', Dashboard];
+
+  function App() {
+    return (
+      <DesignCanvas>
+        <DCSection id="signup" title="GridTokenX — Signup" subtitle="iOS · dark + purple · 5 screens">
+          {SCREENS.map(([label, Comp], i) => (
+            <DCArtboard key={i} id={'s' + i} label={label} width={402} height={874} data-screen-label={label}>
+              <IOSDevice dark>
+                <Comp />
+              </IOSDevice>
+            </DCArtboard>
+          ))}
+        </DCSection>
+        <DCSection id="app" title="GridTokenX — App" subtitle="Where signup lands · interactive · tap to trade">
+          <DCArtboard id="dash" label={DASH[0]} width={402} height={874} data-screen-label={DASH[0]}>
+            <IOSDevice dark>
+              <Dashboard />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="dasheasy" label="06b · Dashboard — Easy view (age-friendly)" width={402} height={874} data-screen-label="06b · Dashboard Easy">
+            <IOSDevice dark>
+              <DashboardEasy />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="wallet" label="07 · Profile & Wallet" width={402} height={874} data-screen-label="07 · Profile & Wallet">
+            <IOSDevice dark>
+              <WalletPage />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="settings" label="08 · Settings (Dark / Light)" width={402} height={874} data-screen-label="08 · Settings">
+            <ThemedSettings />
+          </DCArtboard>
+          <DCArtboard id="profile-edit" label="08b · Edit profile" width={402} height={874} data-screen-label="08b · Edit profile">
+            <IOSDevice dark>
+              <ProfileEdit onBack={() => {}} />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="deposit" label="09 · Deposit" width={402} height={874} data-screen-label="09 · Deposit">
+            <IOSDevice dark>
+              <DepositPage />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="deposit-promptpay" label="09a · Deposit · PromptPay" width={402} height={874} data-screen-label="09a · PromptPay">
+            <IOSDevice dark>
+              <DepositPromptPay amount="500" />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="deposit-bank" label="09b · Deposit · Bank transfer" width={402} height={874} data-screen-label="09b · Bank transfer">
+            <IOSDevice dark>
+              <DepositBank amount="500" />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="deposit-card" label="09c · Deposit · Debit card" width={402} height={874} data-screen-label="09c · Debit card">
+            <IOSDevice dark>
+              <DepositCard amount="500" />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="withdraw" label="10 · Withdraw" width={402} height={874} data-screen-label="10 · Withdraw">
+            <IOSDevice dark>
+              <WithdrawPage />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="send" label="10a · Send" width={402} height={874} data-screen-label="10a · Send">
+            <IOSDevice dark>
+              <SendPage />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="swap" label="10b · Swap" width={402} height={874} data-screen-label="10b · Swap">
+            <IOSDevice dark>
+              <SwapPage />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="tx-loading" label="10c · Tx · Loading" width={402} height={874} data-screen-label="10c · Tx Loading">
+            <IOSDevice dark>
+              <div style={{ position: 'absolute', inset: 0, background: '#0B0712' }}></div>
+              <TxStatus state="loading" title="Sending…" sub="25 GTX to Somchai" />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="tx-success" label="10d · Tx · Success" width={402} height={874} data-screen-label="10d · Tx Success">
+            <IOSDevice dark>
+              <div style={{ position: 'absolute', inset: 0, background: '#0B0712' }}></div>
+              <TxStatus state="success" title="Sent!" sub="25 GTX sent to Somchai · settled on-chain" primary="Done" onPrimary={() => {}} />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="tx-error" label="10e · Tx · Error" width={402} height={874} data-screen-label="10e · Tx Error">
+            <IOSDevice dark>
+              <div style={{ position: 'absolute', inset: 0, background: '#0B0712' }}></div>
+              <TxStatus state="error" title="Transfer failed" sub="The network rejected this transfer. Your balance was not touched." primary="Try again" onPrimary={() => {}} onSecondary={() => {}} />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="register" label="11 · Register meter (scan barcode)" width={402} height={874} data-screen-label="11 · Register meter">
+            <IOSDevice dark>
+              <RegisterDevice />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="dca" label="12 · DCA strategy" width={402} height={874} data-screen-label="12 · DCA strategy">
+            <IOSDevice dark>
+              <DCAStrategy />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="dca-active" label="12b · DCA active" width={402} height={874} data-screen-label="12b · DCA active">
+            <IOSDevice dark>
+              <DCAActive />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="ndid" label="13 · Verify account (NDID)" width={402} height={874} data-screen-label="13 · Verify account NDID">
+            <IOSDevice dark>
+              <VerifyNDID />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="ndidprofile" label="14 · NDID Verified identity" width={402} height={874} data-screen-label="14 · NDID Verified identity">
+            <IOSDevice dark>
+              <NDIDProfile />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="notifications" label="16 · Notifications" width={402} height={874} data-screen-label="16 · Notifications">
+            <IOSDevice dark>
+              <NotificationsPage />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="orders" label="17 · Order history" width={402} height={874} data-screen-label="17 · Order history">
+            <IOSDevice dark>
+              <OrderHistory />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="energyflow" label="18 · Energy flow (Sankey)" width={402} height={874} data-screen-label="18 · Energy flow">
+            <IOSDevice dark>
+              <EnergyFlowPage />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="homeflow" label="18b · My home energy" width={402} height={874} data-screen-label="18b · My home energy">
+            <IOSDevice dark>
+              <MyHomeFlow />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="billing" label="19 · Electrical billing" width={402} height={874} data-screen-label="19 · Electrical billing">
+            <IOSDevice dark>
+              <BillingPage />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="billing-history" label="20 · Billing history" width={402} height={874} data-screen-label="20 · Billing history">
+            <IOSDevice dark>
+              <HistoricalBilling />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="billing-detail" label="20a · Statement detail (deep)" width={402} height={874} data-screen-label="20a · Statement detail">
+            <IOSDevice dark>
+              <StatementDetail data={{ id: '2026-05', label: 'May 2026', amt: 612.40, import: 198.0, sold: 104.2, fee: 38, gridCost: 966.20, credit: 391.80, paid: true, paidOn: '26 May 2026', method: 'PromptPay', read0: 41820, read1: 42018 }} onBack={() => {}} />
+            </IOSDevice>
+          </DCArtboard>
+        </DCSection>
+        <DCSection id="island" title="Dynamic Island — live trade" subtitle="Energy buy / sell live activity · compact + expanded">
+          <DCArtboard id="di-sell" label="DI · Selling (on dashboard)" width={402} height={874} data-screen-label="DI · Selling">
+            <IOSDevice dark island={<EnergyIslandExpanded mode="sell" />}>
+              <Dashboard />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="di-buy" label="DI · Buying (on dashboard)" width={402} height={874} data-screen-label="DI · Buying">
+            <IOSDevice dark island={<EnergyIslandExpanded mode="buy" />}>
+              <Dashboard />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="di-send" label="DI · Sent success (on wallet)" width={402} height={874} data-screen-label="DI · Sent">
+            <IOSDevice dark island={<TxIslandSuccess mode="send" />}>
+              <WalletPage />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="di-receive" label="DI · Receive success (on wallet)" width={402} height={874} data-screen-label="DI · Received">
+            <IOSDevice dark island={<TxIslandSuccess mode="receive" />}>
+              <WalletPage />
+            </IOSDevice>
+          </DCArtboard>
+          <DCArtboard id="di-st-compact" label="DI · Compact (sell / buy)" width={300} height={200} data-screen-label="DI · Compact sell-buy">
+            <div style={{ width: '100%', height: '100%', background: '#15101F', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 9, fontFamily: '-apple-system, system-ui, sans-serif' }}>
+              <span style={{ fontSize: 12, color: 'rgba(244,241,250,0.5)', fontWeight: 600, letterSpacing: 0.4 }}>COMPACT · sell / buy</span>
+              <div style={{ display: 'flex', gap: 16 }}>
+                <EnergyIslandCompact side="sell" />
+                <EnergyIslandCompact side="buy" />
+              </div>
+            </div>
+          </DCArtboard>
+          <DCArtboard id="di-st-txcompact" label="DI · Compact (sent / received)" width={300} height={200} data-screen-label="DI · Compact sent-received">
+            <div style={{ width: '100%', height: '100%', background: '#15101F', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 9, fontFamily: '-apple-system, system-ui, sans-serif' }}>
+              <span style={{ fontSize: 12, color: 'rgba(244,241,250,0.5)', fontWeight: 600, letterSpacing: 0.4 }}>COMPACT · sent / received</span>
+              <div style={{ display: 'flex', gap: 16 }}>
+                <TxIslandCompact mode="send" />
+                <TxIslandCompact mode="receive" />
+              </div>
+            </div>
+          </DCArtboard>
+          <DCArtboard id="di-st-split" label="DI · Split (glanceable)" width={300} height={200} data-screen-label="DI · Split">
+            <div style={{ width: '100%', height: '100%', background: '#15101F', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 9, fontFamily: '-apple-system, system-ui, sans-serif' }}>
+              <span style={{ fontSize: 12, color: 'rgba(244,241,250,0.5)', fontWeight: 600, letterSpacing: 0.4 }}>SPLIT · glanceable</span>
+              <EnergyIslandSplit />
+            </div>
+          </DCArtboard>
+          <DCArtboard id="di-st-exp-trade" label="DI · Expanded (live trade)" width={420} height={260} data-screen-label="DI · Expanded trade">
+            <div style={{ width: '100%', height: '100%', background: '#15101F', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 9, fontFamily: '-apple-system, system-ui, sans-serif' }}>
+              <span style={{ fontSize: 12, color: 'rgba(244,241,250,0.5)', fontWeight: 600, letterSpacing: 0.4 }}>EXPANDED · long-press</span>
+              <EnergyIslandExpanded mode="sell" />
+            </div>
+          </DCArtboard>
+          <DCArtboard id="di-st-exp-sent" label="DI · Expanded (sent success)" width={420} height={220} data-screen-label="DI · Expanded sent">
+            <div style={{ width: '100%', height: '100%', background: '#15101F', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 9, fontFamily: '-apple-system, system-ui, sans-serif' }}>
+              <span style={{ fontSize: 12, color: 'rgba(244,241,250,0.5)', fontWeight: 600, letterSpacing: 0.4 }}>EXPANDED · sent success</span>
+              <TxIslandSuccess mode="send" />
+            </div>
+          </DCArtboard>
+          <DCArtboard id="di-st-exp-received" label="DI · Expanded (received)" width={420} height={220} data-screen-label="DI · Expanded received">
+            <div style={{ width: '100%', height: '100%', background: '#15101F', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 9, fontFamily: '-apple-system, system-ui, sans-serif' }}>
+              <span style={{ fontSize: 12, color: 'rgba(244,241,250,0.5)', fontWeight: 600, letterSpacing: 0.4 }}>EXPANDED · received</span>
+              <TxIslandSuccess mode="receive" />
+            </div>
+          </DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+    );
+  }
+
+  const __el = document.getElementById('root');
+  __el.__root = __el.__root || ReactDOM.createRoot(__el);
+  __el.__root.render(<App />);
+</script>
+</body>
+</html>

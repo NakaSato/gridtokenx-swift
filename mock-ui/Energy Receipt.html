@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energy Receipt — PEA / MEA</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --ink: #1A1B22;
+    --soft: #5C5F6B;
+    --faint: #9498A4;
+    --line: #E4E5EA;
+    --line2: #EFF0F3;
+    --paper: #FFFFFF;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --sans: 'IBM Plex Sans Thai', -apple-system, system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #5A5560; font-family: var(--sans); color: var(--ink); padding: 32px 0; -webkit-font-smoothing: antialiased; }
+
+  .toolbar {
+    position: fixed; top: 16px; right: 16px; z-index: 100; display: flex; gap: 8px;
+  }
+  .toolbar button {
+    font-family: var(--sans); font-size: 13px; font-weight: 600; color: #fff;
+    background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.2); border-radius: 9px;
+    padding: 9px 15px; cursor: pointer; backdrop-filter: blur(8px);
+  }
+  .toolbar button:hover { background: rgba(0,0,0,0.75); }
+
+  .stack { display: flex; flex-direction: column; align-items: center; gap: 30px; }
+
+  .page {
+    width: 210mm; min-height: 297mm; background: var(--paper);
+    box-shadow: 0 12px 50px rgba(0,0,0,0.3); position: relative;
+    padding: 0; overflow: hidden; display: flex; flex-direction: column;
+  }
+
+  /* ── header band ── */
+  .band { padding: 26px 30px 22px; color: #fff; position: relative; overflow: hidden; }
+  .band::after { content: ''; position: absolute; top: -60px; right: -40px; width: 220px; height: 220px; border-radius: 50%; background: rgba(255,255,255,0.08); }
+  .band-top { display: flex; align-items: flex-start; justify-content: space-between; position: relative; z-index: 1; }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .logo { width: 52px; height: 52px; border-radius: 13px; background: rgba(255,255,255,0.16); border: 1.5px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .auth-th { font-size: 19px; font-weight: 700; letter-spacing: -0.2px; line-height: 1.1; }
+  .auth-en { font-size: 11.5px; font-weight: 500; opacity: 0.85; margin-top: 3px; letter-spacing: 0.3px; }
+  .doc-title { text-align: right; }
+  .doc-title .t1 { font-size: 16px; font-weight: 700; }
+  .doc-title .t2 { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+  .doc-title .tax { display: inline-block; margin-top: 8px; font-size: 10px; font-weight: 600; letter-spacing: 0.5px; padding: 3px 9px; border-radius: 5px; background: rgba(255,255,255,0.2); }
+
+  .band-meta { display: flex; gap: 30px; margin-top: 20px; position: relative; z-index: 1; }
+  .band-meta .item .l { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.6px; opacity: 0.72; }
+  .band-meta .item .v { font-size: 13.5px; font-weight: 600; font-family: var(--mono); margin-top: 3px; }
+
+  /* ── body ── */
+  .body { padding: 24px 30px; flex: 1; }
+  .row2 { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; }
+  .field-label { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--faint); font-weight: 600; }
+  .cust-name { font-size: 17px; font-weight: 700; margin-top: 5px; }
+  .cust-addr { font-size: 12.5px; color: var(--soft); line-height: 1.5; margin-top: 4px; }
+  .kv { display: flex; justify-content: space-between; padding: 6px 0; font-size: 12.5px; }
+  .kv .k { color: var(--soft); }
+  .kv .v { font-weight: 600; font-family: var(--mono); }
+
+  .section-h { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--faint); font-weight: 700; margin: 26px 0 10px; }
+
+  table { width: 100%; border-collapse: collapse; }
+  .meter-tbl th { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--faint); font-weight: 600; text-align: right; padding: 8px 10px; border-bottom: 1.5px solid var(--line); }
+  .meter-tbl th:first-child { text-align: left; }
+  .meter-tbl td { font-size: 12.5px; padding: 11px 10px; text-align: right; font-family: var(--mono); font-weight: 500; border-bottom: 1px solid var(--line2); }
+  .meter-tbl td:first-child { text-align: left; font-family: var(--sans); font-weight: 500; }
+
+  .charge { display: flex; align-items: center; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid var(--line2); }
+  .charge .lab { font-size: 13px; font-weight: 500; }
+  .charge .sub { font-size: 11px; color: var(--faint); margin-top: 2px; }
+  .charge .amt { font-size: 13.5px; font-weight: 600; font-family: var(--mono); }
+  .charge.credit .amt { color: #1F9D57; }
+  .charge.credit .badge { display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 0.4px; padding: 2px 7px; border-radius: 4px; margin-left: 8px; vertical-align: middle; }
+
+  .totals { margin-top: 4px; }
+  .totals .line { display: flex; justify-content: space-between; padding: 7px 0; font-size: 12.5px; }
+  .totals .line .k { color: var(--soft); }
+  .totals .line .v { font-family: var(--mono); font-weight: 500; }
+
+  .nettotal { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; padding: 16px 20px; border-radius: 14px; }
+  .nettotal .lab { font-size: 13px; font-weight: 600; color: #fff; opacity: 0.9; }
+  .nettotal .lab .sub { font-size: 10.5px; opacity: 0.8; font-weight: 500; margin-top: 2px; }
+  .nettotal .val { font-size: 30px; font-weight: 800; font-family: var(--mono); color: #fff; letter-spacing: -1px; }
+
+  /* ── pay strip ── */
+  .pay { display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; margin-top: 22px; padding: 18px 20px; border: 1px solid var(--line); border-radius: 14px; background: #FBFBFC; }
+  .pay .stamp { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: #1F9D57; }
+  .pay .stamp svg { flex-shrink: 0; }
+  .pay-detail { margin-top: 10px; }
+  .qr { width: 96px; height: 96px; border-radius: 10px; background: #fff; border: 1px solid var(--line); padding: 7px; }
+
+  .foot { padding: 16px 30px 22px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+  .foot .note { font-size: 10px; color: var(--faint); line-height: 1.5; max-width: 62%; }
+  .gtx { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--soft); font-weight: 600; }
+  .gtx .mark { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .gtx .mark i { width: 5px; height: 5px; border-radius: 1.5px; display: block; }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .toolbar { display: none; }
+    .stack { gap: 0; }
+    .page { box-shadow: none; width: 100%; min-height: 100vh; page-break-after: always; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button onclick="window.print()">⬇ Save as PDF</button>
+</div>
+
+<div class="stack" id="stack"></div>
+
+<script>
+const fmt = n => n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+// sun glyph for MEA, grid glyph for PEA
+const ICONS = {
+  pea: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M3 9h18M3 15h18M9 3v18M15 3v18" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  mea: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 5V3M12 21v-2M5 12H3M21 12h-2M6.4 6.4L5 5M18.6 6.4 20 5M6.4 17.6 5 19M18.6 17.6 20 19M12 8a4 4 0 100 8 4 4 0 000-8z" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+};
+const CHECK = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 12.5l5 5 11-12" stroke="#1F9D57" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+// fake PromptPay-style QR
+function qr() {
+  const N = 21; let cells = '';
+  const finder = (r,c) => (r<7&&c<7)||(r<7&&c>=N-7)||(r>=N-7&&c<7);
+  for (let r=0;r<N;r++) for (let c=0;c<N;c++){
+    let on;
+    if (finder(r,c)){ const lr=r<7?r:r-(N-7), lc=c<7?c:c-(N-7); on = lr===0||lr===6||lc===0||lc===6||(lr>=2&&lr<=4&&lc>=2&&lc<=4); }
+    else on = ((r*7+c*13+(r^c)*5)%3===0);
+    if(on) cells += `<rect x="${c}" y="${r}" width="1.04" height="1.04" fill="#10111A"/>`;
+  }
+  return `<svg viewBox="0 0 ${N} ${N}" width="100%" height="100%">${cells}</svg>`;
+}
+
+const AUTH = {
+  pea: {
+    grad: 'linear-gradient(120deg, #7B2E8E 0%, #5E2374 100%)',
+    accent: '#7B2E8E', creditBg: '#EAF7EF',
+    th: 'การไฟฟ้าส่วนภูมิภาค', en: 'Provincial Electricity Authority',
+    taxId: '0994000165676', region: 'นนทบุรี · Nonthaburi',
+    ca: '0204-5821-7793', rate: '1.1 Residential ≤150 kWh',
+    addr: '88/12 Soi Tiwanon 14, Talat Khwan,<br>Mueang Nonthaburi, Nonthaburi 11000',
+    inv: 'PEA-2026-05-118842', ft: 0.3972,
+  },
+  mea: {
+    grad: 'linear-gradient(120deg, #00897B 0%, #00665B 100%)',
+    accent: '#00897B', creditBg: '#E7F6F3',
+    th: 'การไฟฟ้านครหลวง', en: 'Metropolitan Electricity Authority',
+    taxId: '0994000158441', region: 'เขตวัฒนา · Watthana',
+    ca: '1130-4471-2208', rate: '1.1 Residential ≤150 kWh',
+    addr: '120/5 Sukhumvit 49, Khlong Tan Nuea,<br>Watthana, Bangkok 10110',
+    inv: 'MEA-2026-05-449021', ft: 0.3972,
+  },
+};
+
+function buildPage(key) {
+  const a = AUTH[key];
+  // figures
+  const units = 198;                       // kWh imported
+  const energy = units * 4.42;             // tiered avg base tariff
+  const ftAmt = units * a.ft;
+  const service = 38.22;
+  const p2pSold = 104.2;
+  const p2pCredit = 391.80;
+  const subtotal = energy + ftAmt + service - p2pCredit;
+  const vat = subtotal * 0.07;
+  const net = subtotal + vat;
+
+  return `
+  <div class="page">
+    <div class="band" style="background:${a.grad}">
+      <div class="band-top">
+        <div class="brand">
+          <div class="logo">${ICONS[key]}</div>
+          <div>
+            <div class="auth-th">${a.th}</div>
+            <div class="auth-en">${a.en}</div>
+          </div>
+        </div>
+        <div class="doc-title">
+          <div class="t1">ใบเสร็จรับเงิน</div>
+          <div class="t2">Receipt / Tax Invoice (ABB)</div>
+          <span class="tax">TAX ID ${a.taxId}</span>
+        </div>
+      </div>
+      <div class="band-meta">
+        <div class="item"><div class="l">Invoice No.</div><div class="v">${a.inv}</div></div>
+        <div class="item"><div class="l">Billing period</div><div class="v">May 2026</div></div>
+        <div class="item"><div class="l">Issued</div><div class="v">26 May 2026</div></div>
+        <div class="item"><div class="l">Service area</div><div class="v" style="font-family:var(--sans);font-size:12px">${a.region}</div></div>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="row2">
+        <div>
+          <div class="field-label">Billed to</div>
+          <div class="cust-name">Maya Chen · มายา เฉิน</div>
+          <div class="cust-addr">${a.addr}</div>
+        </div>
+        <div>
+          <div class="kv"><span class="k">Account (CA) No.</span><span class="v">${a.ca}</span></div>
+          <div class="kv"><span class="k">Meter No.</span><span class="v">GTX-5821</span></div>
+          <div class="kv"><span class="k">Rate category</span><span class="v" style="font-family:var(--sans);font-weight:600">${a.rate}</span></div>
+          <div class="kv"><span class="k">Ft (May 2026)</span><span class="v">${a.ft.toFixed(4)} ฿/kWh</span></div>
+        </div>
+      </div>
+
+      <div class="section-h">Meter reading</div>
+      <table class="meter-tbl">
+        <thead><tr><th>Description</th><th>Previous</th><th>Present</th><th>Mult.</th><th>Units (kWh)</th></tr></thead>
+        <tbody>
+          <tr><td>Energy imported from grid</td><td>41,820</td><td>42,018</td><td>1</td><td>198</td></tr>
+          <tr><td>Energy sold via P2P (GridTokenX)</td><td>—</td><td>—</td><td>1</td><td>104.2</td></tr>
+        </tbody>
+      </table>
+
+      <div class="section-h">Charges</div>
+      <div class="charge"><div><div class="lab">Energy charge</div><div class="sub">198 kWh · tiered base tariff</div></div><div class="amt">฿${fmt(energy)}</div></div>
+      <div class="charge"><div><div class="lab">Ft adjustment</div><div class="sub">198 kWh × ฿${a.ft.toFixed(4)}</div></div><div class="amt">฿${fmt(ftAmt)}</div></div>
+      <div class="charge"><div><div class="lab">Service charge</div><div class="sub">Fixed monthly</div></div><div class="amt">฿${fmt(service)}</div></div>
+      <div class="charge credit"><div><div class="lab">P2P energy credit <span class="badge" style="background:${a.creditBg};color:${a.accent}">GRIDTOKENX</span></div><div class="sub">104.2 kWh sold to neighbours in your zone</div></div><div class="amt">−฿${fmt(p2pCredit)}</div></div>
+
+      <div class="totals">
+        <div class="line"><span class="k">Subtotal</span><span class="v">฿${fmt(subtotal)}</span></div>
+        <div class="line"><span class="k">VAT 7%</span><span class="v">฿${fmt(vat)}</span></div>
+      </div>
+
+      <div class="nettotal" style="background:${a.grad}">
+        <div class="lab">Net amount<div class="sub">รวมเงินที่ชำระ (บาท)</div></div>
+        <div class="val">฿${fmt(net)}</div>
+      </div>
+
+      <div class="pay">
+        <div>
+          <div class="stamp">${CHECK} PAID · ชำระเงินแล้ว</div>
+          <div class="pay-detail">
+            <div class="kv" style="padding:4px 0"><span class="k">Paid on</span><span class="v">26 May 2026, 09:14</span></div>
+            <div class="kv" style="padding:4px 0"><span class="k">Method</span><span class="v" style="font-family:var(--sans);font-weight:600">PromptPay · SCB</span></div>
+            <div class="kv" style="padding:4px 0"><span class="k">Ref.</span><span class="v">${a.inv}</span></div>
+          </div>
+        </div>
+        <div style="text-align:center">
+          <div class="qr">${qr()}</div>
+          <div style="font-size:9px;color:var(--faint);margin-top:5px;letter-spacing:0.3px">Scan to verify</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <div class="note">This receipt is electronically generated and valid without signature. P2P energy credits are settled on the GridTokenX network and netted against your ${a.en} bill under the national net-metering pilot. Keep for your records.</div>
+      <div class="gtx">
+        <div class="mark"><i style="background:${a.accent}"></i><i style="background:#A974FF"></i><i style="background:#A974FF"></i><i style="background:${a.accent}"></i></div>
+        Powered by GridTokenX
+      </div>
+    </div>
+  </div>`;
+}
+
+document.getElementById('stack').innerHTML = buildPage('pea') + buildPage('mea');
+</script>
+</body>
+</html>

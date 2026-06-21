@@ -23,6 +23,3 @@ Carthage/Build/
 
 # Injection (hot reload)
 iOSInjectionProject/
-
-# Local reference assets (not part of the app target)
-mock-ui/
