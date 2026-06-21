@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct RootView: View {
-    private enum Route { case welcome, createAccount, verify, profile, success, app, profileWallet, sentSuccess, dashboardLive, notifications, settings, dca, energyFlow, myHomeFlow }
+    private enum Route { case welcome, createAccount, verify, profile, success, app, profileWallet, sentSuccess, dashboardLive, notifications, settings, dca, energyFlow, myHomeFlow, ndid, ndidProfile, billing, billingHistory, deposit, withdraw, gridMap, orders, dashboardEasy, register }
 
     @State private var route: Route = .welcome
     @State private var forward = true   // drives slide direction (push vs pop)
@@ -68,6 +68,36 @@ struct RootView: View {
             }
             if args.contains("SHOW_HOME_FLOW") {
                 route = .myHomeFlow
+            }
+            if args.contains("SHOW_NDID") {
+                route = .ndid
+            }
+            if args.contains("SHOW_NDID_PROFILE") {
+                route = .ndidProfile
+            }
+            if args.contains("SHOW_BILLING") {
+                route = .billing
+            }
+            if args.contains("SHOW_BILLING_HISTORY") {
+                route = .billingHistory
+            }
+            if args.contains("SHOW_DEPOSIT") {
+                route = .deposit
+            }
+            if args.contains("SHOW_WITHDRAW") {
+                route = .withdraw
+            }
+            if args.contains("SHOW_GRID_MAP") {
+                route = .gridMap
+            }
+            if args.contains("SHOW_ORDERS") {
+                route = .orders
+            }
+            if args.contains("SHOW_DASHBOARD_EASY") {
+                route = .dashboardEasy
+            }
+            if args.contains("SHOW_REGISTER") {
+                route = .register
             }
             if args.contains("TX_ISLAND") {
                 TxLiveActivityManager.show(TxReceipt(mode: .send))
@@ -152,7 +182,31 @@ struct RootView: View {
                 onSettings: { push(.settings) }
             )
         case .settings:
-            SettingsView(onBack: { pop(.profileWallet) })
+            SettingsView(
+                onBack: { pop(.profileWallet) },
+                onVerifyNDID: { push(.ndid) })
+        case .ndid:
+            NDIDView(
+                onBack: { pop(.settings) },
+                onVerified: { pop(.settings) })
+        case .ndidProfile:
+            NDIDProfileView(onBack: { pop(.settings) })
+        case .billing:
+            BillingView(onBack: { pop(.app) })
+        case .billingHistory:
+            BillingHistoryView(onBack: { pop(.app) })
+        case .deposit:
+            DepositView(onBack: { pop(.profileWallet) })
+        case .withdraw:
+            WithdrawView(onBack: { pop(.profileWallet) })
+        case .gridMap:
+            GridMapView(onBack: { pop(.app) })
+        case .orders:
+            OrderHistoryView(onBack: { pop(.app) })
+        case .dashboardEasy:
+            DashboardEasyView(name: displayName, onBack: { pop(.app) })
+        case .register:
+            RegisterDeviceView(onBack: { pop(.settings) })
         }
     }
 
