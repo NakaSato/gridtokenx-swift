@@ -12,6 +12,7 @@ import SwiftUI
 
 struct SettingsView: View {
     var onBack: () -> Void = {}
+    var onVerifyNDID: () -> Void = {}
 
     @ObserveInjection var inject
 
@@ -97,6 +98,8 @@ struct SettingsView: View {
                             toggleRow("faceid", "Face ID unlock", $faceID)
                             divider(56)
                             row("lock.fill", "Two-factor auth", detail: "On")
+                            divider(56)
+                            row("checkmark.shield.fill", "Identity (NDID)", detail: "Verify") { onVerifyNDID() }
                             divider(56)
                             row("key.fill", "Recovery phrase")
                         }
