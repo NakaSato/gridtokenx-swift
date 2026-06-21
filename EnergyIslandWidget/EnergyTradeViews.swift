@@ -68,9 +68,14 @@ struct FlowBars: View {
 struct EnergyIslandCompactLeading: View {
     var trade = EnergyTrade()
     var body: some View {
-        Image(systemName: "bolt.fill")
-            .font(.system(size: 15, weight: .bold))
-            .foregroundStyle(trade.accent)
+        HStack(spacing: 4) {
+            Image(systemName: "bolt.fill")
+                .font(.system(size: 15, weight: .bold))
+                .foregroundStyle(trade.accent)
+            Text(trade.rateText)
+                .font(.system(size: 13.5, weight: .bold, design: .monospaced))
+                .foregroundStyle(.white)
+        }
     }
 }
 
