@@ -15,6 +15,8 @@ Native SwiftUI app for **GridTokenX** — a peer-to-peer clean-energy trading co
   <img src="picture/app_3.png" width="18%" alt="App screen 3" />
   <img src="picture/app_4.png" width="18%" alt="App screen 4" />
   <img src="picture/app_5.png" width="18%" alt="App screen 5" />
+  <img src="picture/app_6.png" width="18%" alt="App screen 6" />
+  <img src="picture/app_7.png" width="18%" alt="App screen 7" />
 </p>
 
 ## Features
