@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-GridTokenX iOS app (`gridtokexios`). Native SwiftUI. Screens ported from the `mock-ui/` HTML/JSX prototypes. Two parts: a signup flow (Welcome → Create account → Verify email → Profile + role → Success → Dashboard) and a large set of post-login feature screens reached from the dashboard (live dashboard, DCA, energy flow, grid map, billing, orders, transfer/deposit/withdraw, NDID identity, register device, settings, notifications, profile & wallet). No persistence layer yet — views drive themselves with local `@State`; the SwiftData template (`Item`/`ContentView`) has been removed.
+GridTokenX iOS app (`gridtokexios`). Native SwiftUI. Screens ported from the `mock-ui/` HTML/JSX prototypes. Two parts: a signup flow (Welcome → Create account → Verify email → Profile + role → Success → Dashboard) and a set of post-login feature screens reached from the dashboard (see the `Features/` tree below for the canonical list). No persistence layer yet — views drive themselves with local `@State`; the SwiftData template (`Item`/`ContentView`) has been removed.
 
 - Bundle ID: `gridtokenx.gridtokexios`
 - Deployment target: iOS 26.5, universal (iPhone + iPad, `TARGETED_DEVICE_FAMILY = "1,2"`)
@@ -47,7 +47,7 @@ gridtokexios/
 │   ├── Settings/       SettingsView, ProfileEditView
 │   ├── Billing/        BillingView, BillingHistoryView
 │   ├── DCA/            DCAView          # dollar-cost-average buy plan
-│   ├── EnergyFlow/     EnergyFlowView
+│   ├── EnergyFlow/     EnergyFlowView, MyHomeFlowView   # route .myHomeFlow
 │   ├── GridMap/        GridMapView
 │   ├── NDID/           NDIDView, NDIDProfileView   # Thai NDID identity
 │   ├── Orders/         OrderHistoryView
@@ -60,7 +60,7 @@ gridtokexios/
 ```
 
 - `App/gridtokexiosApp.swift` — `@main` entry. Hosts `RootView` in a `WindowGroup`. DEBUG `init()` loads the InjectionIII bundle for hot reload. No SwiftData container (re-add `.modelContainer` here when a real `@Model` lands).
-- `App/RootView.swift` — the router. A single `private enum Route` flat-lists every screen (`welcome, createAccount, verify, profile, success, app, profileWallet, sentSuccess, dashboardLive, notifications, settings, dca, energyFlow, myHomeFlow, ndid, ndidProfile, billing, billingHistory, deposit, withdraw, gridMap, orders, register`). A `path` stack with `push`/`pop` drives a direction-aware slide via an asymmetric `pushPop` transition. Owns `welcomeStart` (fixed at launch) so back-nav to Welcome skips the intro, and `displayName` threaded into Success/Dashboard. Dashboard buttons `push(...)` the feature routes; observes `NotificationManager.didTapDeeplink` to deep-link tapped notifications. **Every new screen wires here** — add a `Route` case + a `switch` arm.
+- `App/RootView.swift` — the router. A single `private enum Route` flat-lists every screen (see the enum in the source for the canonical case list). Navigation is **not** a stack: one `@State route` holds the current screen, and `push(next)` / `pop(prev)` both just assign `route` (pop takes the destination explicitly) — they only flip a `forward` flag to drive a direction-aware slide via the asymmetric `pushPop` transition. Owns `welcomeStart` (fixed at launch) so back-nav to Welcome skips the intro, and `displayName` threaded into Success/Dashboard. Dashboard buttons `push(...)` the feature routes; observes `NotificationManager.didTapDeeplink` to deep-link tapped notifications. **Every new screen wires here** — add a `Route` case + a `switch` arm.
 - `Features/**` screen views — each takes plain closures (`onContinue`, `onBack`, …); no shared store. New feature → new `Features/<Name>/` folder; add `ViewModel`/`Model` subfiles when logic lands.
 - `DesignSystem/GTXDesignTokens.swift` — `Color(hex:)`, `GTXColor` palette (dark + `light*` variants, `buy`/`sell`/`gold`), and the scale enums `GTXSpacing` / `GTXRadius` / `GTXFont` / `GTXLayout` / `GTXOpacity`, plus `LinearGradient.gtxBrand` and `GTXPrimaryButtonStyle`. **Use these tokens, not raw values.**
 - `DesignSystem/GTXComponents.swift` — shared `GTXBackButton` / `GTXTopGlow` / `GTXField`.
