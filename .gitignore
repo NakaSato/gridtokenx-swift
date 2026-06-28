@@ -23,6 +23,3 @@ Carthage/Build/
 
 # Injection (hot reload)
 iOSInjectionProject/
-
-# Local dev screenshots
-picture/
