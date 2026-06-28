@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-GridTokenX iOS app (`gridtokexios`). Native SwiftUI. A multi-screen signup flow ported from the `mock-ui/` HTML/JSX prototypes: Welcome → Create account → Verify email → Profile + role → Success → Dashboard. No persistence layer yet — views drive themselves with local `@State`; the SwiftData template (`Item`/`ContentView`) has been removed.
+GridTokenX iOS app (`gridtokexios`). Native SwiftUI. Screens ported from the `mock-ui/` HTML/JSX prototypes. Two parts: a signup flow (Welcome → Create account → Verify email → Profile + role → Success → Dashboard) and a large set of post-login feature screens reached from the dashboard (live dashboard, DCA, energy flow, grid map, billing, orders, transfer/deposit/withdraw, NDID identity, register device, settings, notifications, profile & wallet). No persistence layer yet — views drive themselves with local `@State`; the SwiftData template (`Item`/`ContentView`) has been removed.
 
 - Bundle ID: `gridtokenx.gridtokexios`
 - Deployment target: iOS 26.5, universal (iPhone + iPad, `TARGETED_DEVICE_FAMILY = "1,2"`)
@@ -38,21 +38,33 @@ Source is organized by responsibility under `gridtokexios/`. The target uses an 
 ```
 gridtokexios/
 ├── App/            # composition root — gridtokexiosApp.swift, RootView.swift
-├── DesignSystem/   # GTXDesignTokens.swift, GTXComponents.swift
+├── DesignSystem/   # GTXDesignTokens.swift, GTXComponents.swift, GTXKit.swift
 ├── Features/       # one folder per screen group
-│   ├── Welcome/        WelcomeView.swift
+│   ├── Welcome/        WelcomeView
 │   ├── Onboarding/     CreateAccountView, VerifyEmailView, ProfileView, SuccessView
-│   ├── Dashboard/      DashboardView.swift
-│   ├── Profile/        ProfileWalletView.swift
-│   └── Receipt/        ReceiptExpandedView.swift
+│   ├── Dashboard/      DashboardView, DashboardLiveView
+│   ├── Profile/        ProfileWalletView
+│   ├── Settings/       SettingsView, ProfileEditView
+│   ├── Billing/        BillingView, BillingHistoryView
+│   ├── DCA/            DCAView          # dollar-cost-average buy plan
+│   ├── EnergyFlow/     EnergyFlowView
+│   ├── GridMap/        GridMapView
+│   ├── NDID/           NDIDView, NDIDProfileView   # Thai NDID identity
+│   ├── Orders/         OrderHistoryView
+│   ├── Transfer/       TransferView     # deposit / withdraw
+│   ├── Register/       RegisterDeviceView
+│   ├── Notifications/  NotificationsView
+│   └── Receipt/        ReceiptExpandedView
 ├── Core/           # cross-cutting infra — Inject.swift, Notifications/ (future: Networking/, Persistence/)
 └── Resources/      # Assets.xcassets
 ```
 
 - `App/gridtokexiosApp.swift` — `@main` entry. Hosts `RootView` in a `WindowGroup`. DEBUG `init()` loads the InjectionIII bundle for hot reload. No SwiftData container (re-add `.modelContainer` here when a real `@Model` lands).
-- `App/RootView.swift` — the router. `enum Route` (welcome → createAccount → verify → profile → success → app, plus `profileWallet`); `push`/`pop` drive a direction-aware slide via an asymmetric `pushPop` transition. Owns `welcomeStart` (fixed at launch) so back-nav to Welcome skips the intro, and `displayName` threaded into Success/Dashboard. Dashboard profile button → `push(.profileWallet)`; observes `NotificationManager.didTapDeeplink` to deep-link tapped notifications to the wallet.
-- `Features/**` screen views — `WelcomeView`, `CreateAccountView`, `VerifyEmailView`, `ProfileView`, `SuccessView`, `DashboardView`. Each takes plain closures (`onContinue`, `onBack`, …); no shared store. New feature → new `Features/<Name>/` folder; add `ViewModel`/`Model` subfiles when logic lands.
-- `DesignSystem/GTXDesignTokens.swift` — `Color(hex:)`, `GTXColor` palette, `LinearGradient.gtxBrand`, `GTXPrimaryButtonStyle`. `DesignSystem/GTXComponents.swift` — shared `GTXBackButton` / `GTXTopGlow` / `GTXField`.
+- `App/RootView.swift` — the router. A single `private enum Route` flat-lists every screen (`welcome, createAccount, verify, profile, success, app, profileWallet, sentSuccess, dashboardLive, notifications, settings, dca, energyFlow, myHomeFlow, ndid, ndidProfile, billing, billingHistory, deposit, withdraw, gridMap, orders, register`). A `path` stack with `push`/`pop` drives a direction-aware slide via an asymmetric `pushPop` transition. Owns `welcomeStart` (fixed at launch) so back-nav to Welcome skips the intro, and `displayName` threaded into Success/Dashboard. Dashboard buttons `push(...)` the feature routes; observes `NotificationManager.didTapDeeplink` to deep-link tapped notifications. **Every new screen wires here** — add a `Route` case + a `switch` arm.
+- `Features/**` screen views — each takes plain closures (`onContinue`, `onBack`, …); no shared store. New feature → new `Features/<Name>/` folder; add `ViewModel`/`Model` subfiles when logic lands.
+- `DesignSystem/GTXDesignTokens.swift` — `Color(hex:)`, `GTXColor` palette (dark + `light*` variants, `buy`/`sell`/`gold`), and the scale enums `GTXSpacing` / `GTXRadius` / `GTXFont` / `GTXLayout` / `GTXOpacity`, plus `LinearGradient.gtxBrand` and `GTXPrimaryButtonStyle`. **Use these tokens, not raw values.**
+- `DesignSystem/GTXComponents.swift` — shared `GTXBackButton` / `GTXTopGlow` / `GTXField`.
+- `DesignSystem/GTXKit.swift` — higher-level component kit built on the tokens: `.gtxCard()` modifier, `GTXIconDisc` / `GTXTextDisc`, `GTXListRow`, `GTXSectionHeader`, `.gtxUniversalWidth()`. Reach for these before re-rolling card/row/disc boilerplate.
 - `Core/Inject.swift` — DEBUG hot-reload shim (`@ObserveInjection` + `.enableInjection()`); RELEASE compiles to no-ops.
 - `Core/Notifications/LiveActivityManager.swift` — starts/updates/ends the energy-trade Live Activity (`Activity<EnergyTradeAttributes>`). Local-driven (`pushType: nil`); `start` replaces any running activity.
 - `Core/Notifications/TxLiveActivityManager.swift` — shows/ends the transaction-success Live Activity (`Activity<TxReceiptAttributes>`); `show` replaces any running receipt and auto-ends after a delay. Wired to wallet Send/Deposit.
@@ -62,7 +74,7 @@ gridtokexios/
 
 ### EnergyIslandWidget target
 
-Second target (app-extension, bundle `gridtokenx.gridtokexios.EnergyIslandWidget`) hosts the Dynamic Island / lock-screen Live Activities. Added via `scripts/add_widget_target.rb` (Ruby `xcodeproj` gem — re-runnable, no-op if the target exists), NOT by hand-editing `project.pbxproj`. The widget group uses **explicit file references** (not a synced folder), so new files added there must be registered with `scripts/add_tx_island_files.rb` (idempotent — pattern to copy for any further widget files). App embeds the extension and sets `INFOPLIST_KEY_NSSupportsLiveActivities = YES`. The `WidgetBundle` hosts two activities: `EnergyIslandLiveActivity` + `TxLiveActivity`.
+Second target (app-extension, bundle `gridtokenx.gridtokexios.EnergyIslandWidget`) hosts the Dynamic Island / lock-screen Live Activities. Added via `scripts/add_widget_target.rb` (Ruby `xcodeproj` gem — re-runnable, no-op if the target exists), NOT by hand-editing `project.pbxproj`. The widget group uses **explicit file references** (not a synced folder), so new files added there must be registered with an idempotent `xcodeproj` Ruby script — `scripts/add_tx_island_files.rb` and `scripts/add_split_view_files.rb` are the existing examples; copy the pattern for any further widget files. App embeds the extension and sets `INFOPLIST_KEY_NSSupportsLiveActivities = YES`. The `WidgetBundle` hosts two activities: `EnergyIslandLiveActivity` + `TxLiveActivity`.
 
 Notification component files are split **model/palette ↔ views**: a `*Island.swift` holds the model (+ palette), a `*Views.swift` holds the SwiftUI presentations, and a `*LiveActivity.swift` holds the widget config.
 
