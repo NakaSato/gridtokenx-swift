@@ -7,6 +7,16 @@ Native SwiftUI app for **GridTokenX** — a peer-to-peer clean-energy trading co
 - **Language:** Swift 5.0 · SwiftUI
 - **Tests:** Swift Testing (`import Testing`) for unit; XCUITest for UI flows
 
+## Screenshots
+
+<p align="center">
+  <img src="picture/app_1.png" width="18%" alt="App screen 1" />
+  <img src="picture/app_2.png" width="18%" alt="App screen 2" />
+  <img src="picture/app_3.png" width="18%" alt="App screen 3" />
+  <img src="picture/app_4.png" width="18%" alt="App screen 4" />
+  <img src="picture/app_5.png" width="18%" alt="App screen 5" />
+</p>
+
 ## Features
 
 A multi-screen signup flow plus a wallet and live energy-trade notifications:
