@@ -19,22 +19,37 @@ Native SwiftUI app for **GridTokenX** — a peer-to-peer clean-energy trading co
 
 ## Features
 
-A multi-screen signup flow plus a wallet and live energy-trade notifications:
+A multi-screen signup flow plus a dashboard with a set of post-login feature screens.
 
-Welcome → Create account → Verify email → Profile + role → Success → Dashboard → Profile & Wallet
+**Signup flow:** Welcome → Create account → Verify email → Profile + role → Success → Dashboard
 
+**Post-login (reached from the dashboard):**
+
+- **Profile & Wallet** — portfolio hero, token holdings / activity tabs, account settings; Send / Deposit fire a transaction-receipt island.
+- **Settings & Profile edit** — account settings and editable profile.
+- **Billing** — billing overview + history.
+- **DCA** — dollar-cost-average buy plan.
+- **Energy flow** — energy-flow and "my home" flow visualizations.
+- **Grid map** — peer / grid map view.
+- **NDID** — Thai NDID identity + profile.
+- **Orders** — order history.
+- **Transfer** — deposit / withdraw.
+- **Register device** · **Notifications** · **Receipt** (expanded sent-success artboard).
 - **Dynamic Island / Live Activities** — live energy-trade island (sell/buy) and transaction-receipt island (send/receive), rendered via ActivityKit.
 - **User notifications** — local `UNUserNotificationCenter` banners; taps deep-link into the wallet.
-- No persistence layer yet — each screen drives itself with local `@State`; navigation lives in `RootView`.
+
+No persistence layer yet — each screen drives itself with local `@State`; navigation lives in `RootView`.
 
 ## Project layout
 
 ```
 gridtokexios/
 ├── App/            composition root — gridtokexiosApp.swift, RootView.swift (router)
-├── DesignSystem/   GTXDesignTokens.swift, GTXComponents.swift
+├── DesignSystem/   GTXDesignTokens.swift, GTXComponents.swift, GTXKit.swift
 ├── Features/       one folder per screen group
-│   ├── Welcome/  Onboarding/  Dashboard/  Profile/  Receipt/
+│   ├── Welcome/  Onboarding/  Dashboard/  Profile/  Settings/  Billing/
+│   ├── DCA/  EnergyFlow/  GridMap/  NDID/  Orders/  Transfer/
+│   └── Register/  Notifications/  Receipt/
 ├── Core/           cross-cutting infra — Inject.swift, Notifications/
 └── Resources/      Assets.xcassets
 
